@@ -39,9 +39,10 @@ Pomodoro is a study method where the student studies intensely for a select amou
 **Optional Features**
 
 1. Interesting visuals to play during the Timer (use TA Dhruval's recommendations for Kotlin libraries for nice animations)
-2. A login/logout system
-3. A sharable page for students to share with their friends their study habits
-4. Reward system (to track stages)
+2. Settings Feature
+3. Reward system (to track stages)
+4. A login/logout system
+5. A sharable page for students to share with their friends their study habits
 
 ### 2. Screen Archetypes
 
