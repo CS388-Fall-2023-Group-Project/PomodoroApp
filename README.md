@@ -61,7 +61,7 @@ Pomodoro is a study method where the student studies intensely for a select amou
 **Tab Navigation** (Tab to Screen)
 - Set Up Studying
 - Navigation Page
-- Login/Logout (option)
+- Login/Logout (optional)
 
 **Flow Navigation** (Screen to Screen)
 
