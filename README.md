@@ -85,6 +85,8 @@ Pomodoro is a study method where the student studies intensely for a select amou
 <br>
 
 ### [BONUS] Digital Wireframes & Mockups
+https://www.figma.com/file/orV5IoLypk69jQMqeaO5Df/Pomodoro?type=design&node-id=58%3A2661&mode=design&t=YrCShyo2FbOC76Xy-1
+
 
 ### [BONUS] Interactive Prototype
 <img src=PrototypeGif.gif title='Video Walkthrough' width='' alt='Video Walkthrough' />
