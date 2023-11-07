@@ -74,7 +74,11 @@ Pomodoro is a study method where the student studies intensely for a select amou
   - item in calendar is pressed -> leads to Page about a specifc study session
 ## Wireframes
 
-[Add picture of your hand sketched wireframes in this section] <img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
+[Add picture of your hand sketched wireframes in this section]
+
+![](PrototypePart1.png)
+![](PrototypePart2.png)
+![](PrototypePart3.png)
 
 <br>
 
