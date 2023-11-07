@@ -28,7 +28,7 @@ Workout App
 
 
 ## Top 3 Ideas
-
+Workout App, Pomodoro App, Texting Game App
 ## Evalutation 
 1. Workout App
    - **Description**: An app to keep track of your workouts and progress. It would also provide recommendations based on what your fitness goals are (i.e weight loss or muscle gain). It would provide tutorials on how to perform the workouts with good form. 
