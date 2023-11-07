@@ -6,14 +6,23 @@ Pomodoro App
 
 ## App Ideas:
 Pokedex
+
 Fitness Study Timer App with Youtube API with navigation
+
 Wikipedia Game
+
 Sports Database App
+
 Sudoku App 
+
 Password Management using Password Suggestion
+
 Texting Game
+
 Music Spotify App (maybe not)
+
 Ikinator
+
 Workout App
 
 
