@@ -83,6 +83,6 @@ Pomodoro is a study method where the student studies intensely for a select amou
 ### [BONUS] Digital Wireframes & Mockups
 
 ### [BONUS] Interactive Prototype
-![](https://github.com/PomodoroApp/PrototypeGif.gif)
+<img src=PrototypeGif.gif title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 <br>
