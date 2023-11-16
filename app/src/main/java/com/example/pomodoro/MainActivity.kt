@@ -19,10 +19,5 @@ class MainActivity : AppCompatActivity() {
         btnAnalyticsTab = findViewById(R.id.TabAnalyticsButton)
         btnHistoryTab = findViewById(R.id.TabHistoryButton)
 
-        // INTENT to History
-        btnHistoryTab.setOnClickListener {
-            val intent = Intent(this, History::class.java)
-            startActivity(intent)
-        }
     }
 }
