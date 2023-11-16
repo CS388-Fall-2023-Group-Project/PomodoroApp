@@ -12,8 +12,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnStartStudyingTab: Button
     private lateinit var btnAnalyticsTab: Button
     private lateinit var btnHistoryTab: Button
-    private lateinit var timerTextView: TextView
-    private lateinit var circularProgressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +20,5 @@ class MainActivity : AppCompatActivity() {
         btnStartStudyingTab = findViewById(R.id.TabStartStudyingButton)
         btnAnalyticsTab = findViewById(R.id.TabAnalyticsButton)
         btnHistoryTab = findViewById(R.id.TabHistoryButton)
-        timerTextView = findViewById(R.id.timetext)
-        circularProgressBar = findViewById(R.id.progressBar)
     }
 }
