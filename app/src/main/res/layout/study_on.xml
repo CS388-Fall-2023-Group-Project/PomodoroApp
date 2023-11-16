@@ -9,8 +9,8 @@
         android:id="@+id/exit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginTop="112dp"
+        android:layout_marginEnd="16dp"
         android:text="Exit Session"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,11 +28,19 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/time"
+        android:id="@+id/timetext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="00:00"
         android:textSize="75sp"
         tools:layout_editor_absoluteX="112dp"
         tools:layout_editor_absoluteY="339dp" />
+
+    <TextView
+        android:id="@+id/studyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Study Session "
+        tools:layout_editor_absoluteX="159dp"
+        tools:layout_editor_absoluteY="53dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
