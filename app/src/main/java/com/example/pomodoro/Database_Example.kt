@@ -1,5 +1,6 @@
 package com.example.pomodoro
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -13,6 +14,7 @@ class Database_Example (context: Context): SQLiteOpenHelper(context, DATABASE_NA
 
         private const val TABLE_HISTORY = "tbl_history"
         private const val COLUMN_ID = "id"
+        private const val COLUMN_DATE = "date"
         private const val COLUMN_TASK_NAME = "taskName"
         private const val COLUMN_TASK_CAT = "taskCategory"
         private const val COLUMN_TIME_RANGE = "timeRange"
@@ -24,6 +26,7 @@ class Database_Example (context: Context): SQLiteOpenHelper(context, DATABASE_NA
         val createHistoryTableQuery = """
             CREATE TABLE $TABLE_HISTORY (
                 $COLUMN_ID INTEGER PRIMARY KEY,
+                $COLUMN_DATE STRING,
                 $COLUMN_TASK_NAME STRING,
                 $COLUMN_TASK_CAT STRING,
                 $COLUMN_TIME_RANGE STRING,
@@ -51,6 +54,7 @@ class Database_Example (context: Context): SQLiteOpenHelper(context, DATABASE_NA
             put(COLUMN_TASK_NAME, "Study")
             put(COLUMN_TASK_CAT, "Math")
             put(COLUMN_TIME_RANGE, "9:00 - 11:00")
+            put(COLUMN_DATE, "2023-11-13")
             put(COLUMN_DURATION, 2)
         }
 
@@ -60,6 +64,31 @@ class Database_Example (context: Context): SQLiteOpenHelper(context, DATABASE_NA
             contentValues,
             SQLiteDatabase.CONFLICT_REPLACE
         )
+    }
+
+    @SuppressLint("Range")
+    fun getTasksForDate(date: String): List<TaskInfo> {
+        val tasks = mutableListOf<TaskInfo>()
+        val db = readableDatabase
+
+        val query = "SELECT * FROM $TABLE_HISTORY WHERE $COLUMN_DATE = ?"
+        val cursor = db.rawQuery(query, arrayOf(date))
+
+        cursor.use {
+            while (it.moveToNext()) {
+                val taskID = it.getInt(it.getColumnIndex(COLUMN_ID))
+                val taskName = it.getString(it.getColumnIndex(COLUMN_TASK_NAME))
+                val taskCategory = it.getString(it.getColumnIndex(COLUMN_TASK_CAT))
+                val timeRange = it.getString(it.getColumnIndex(COLUMN_TIME_RANGE))
+                val duration = it.getInt(it.getColumnIndex(COLUMN_DURATION))
+
+                val task = TaskInfo(taskID, taskName, taskCategory, timeRange, duration)
+                tasks.add(task)
+            }
+        }
+
+        db.close()
+        return tasks
     }
 
 }

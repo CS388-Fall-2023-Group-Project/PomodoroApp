@@ -7,10 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.util.Random
 
-class HistoryRVAdapter (private val foodList: ArrayList<TaskInfo>) :
-    RecyclerView.Adapter<HistoryRVAdapter.ViewHolder>() {
+class HistoryRVAdapter : RecyclerView.Adapter<HistoryRVAdapter.ViewHolder>() {
+    private var taskList: ArrayList<TaskInfo> = ArrayList()
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var taskList: ArrayList<TaskInfo> = ArrayList()
         val taskName = itemView.findViewById<TextView>(R.id.taskTextView)
         val taskCat = itemView.findViewById<TextView>(R.id.categoryTextView)
         val duration = itemView.findViewById<TextView>(R.id.durationTextView)
@@ -24,23 +23,23 @@ class HistoryRVAdapter (private val foodList: ArrayList<TaskInfo>) :
 
     // For RV to populate the views within a ViewHolder
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val tracker = foodList[position]
+        val tracker = taskList[position]
         holder.taskName.text = tracker.task
         holder.taskCat.text = tracker.category
         holder.timeRange.text = tracker.timerange
         holder.duration.text = tracker.duration.toString()
     }
 
-    override fun getItemCount() = foodList.size
+    override fun getItemCount() = taskList.size
     fun clearData() {
-        foodList.clear()
+        taskList.clear()
         notifyDataSetChanged()
     }
 
     // Add this method to update the dataset
-    fun updateData(newData: ArrayList<TaskInfo>) {
-        foodList.clear()
-        foodList.addAll(newData)
+    fun updateData(newData: List<TaskInfo>) {
+        taskList.clear()
+        taskList.addAll(newData)
         notifyDataSetChanged()
     }
 }
