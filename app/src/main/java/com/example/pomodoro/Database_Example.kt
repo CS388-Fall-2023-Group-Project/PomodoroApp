@@ -90,7 +90,6 @@ class Database_Example (context: Context): SQLiteOpenHelper(context, DATABASE_NA
                 }
             }
         } catch (e: Exception) {
-            // Handle any exceptions that might occur during database operations
             Log.e("Database_Example", "Error fetching tasks for date: $date", e)
         } finally {
             db.close()
