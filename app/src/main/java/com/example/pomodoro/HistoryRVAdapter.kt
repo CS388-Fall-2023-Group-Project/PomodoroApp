@@ -27,7 +27,9 @@ class HistoryRVAdapter : RecyclerView.Adapter<HistoryRVAdapter.ViewHolder>() {
         holder.taskName.text = tracker.task
         holder.taskCat.text = tracker.category
         holder.timeRange.text = tracker.timerange
-        holder.duration.text = tracker.duration.toString()
+        tracker.duration?.let {
+            holder.duration.text = "$it hours"
+        }
     }
 
     override fun getItemCount() = taskList.size
