@@ -34,13 +34,14 @@ class Database_Example (context: Context): SQLiteOpenHelper(context, DATABASE_NA
             )
         """.trimIndent()
 
+        Log.d("Database_Example", "Created table")
         db?.execSQL(createHistoryTableQuery)
 
         // Insert a default row with the specified ID
         if (db != null) {
             insertDefaultRow(db)
+            Log.d("Database_Example", "Default row inserted successfully. Row ID: $COLUMN_ID")
         }
-        db?.execSQL(createHistoryTableQuery)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -72,22 +73,29 @@ class Database_Example (context: Context): SQLiteOpenHelper(context, DATABASE_NA
         val db = readableDatabase
 
         val query = "SELECT * FROM $TABLE_HISTORY WHERE $COLUMN_DATE = ?"
-        val cursor = db.rawQuery(query, arrayOf(date))
 
-        cursor.use {
-            while (it.moveToNext()) {
-                val taskID = it.getInt(it.getColumnIndex(COLUMN_ID))
-                val taskName = it.getString(it.getColumnIndex(COLUMN_TASK_NAME))
-                val taskCategory = it.getString(it.getColumnIndex(COLUMN_TASK_CAT))
-                val timeRange = it.getString(it.getColumnIndex(COLUMN_TIME_RANGE))
-                val duration = it.getInt(it.getColumnIndex(COLUMN_DURATION))
+        try {
+            val cursor = db.rawQuery(query, arrayOf(date))
 
-                val task = TaskInfo(taskID, taskName, taskCategory, timeRange, duration)
-                tasks.add(task)
+            cursor.use {
+                while (it.moveToNext()) {
+                    val taskID = it.getInt(it.getColumnIndex(COLUMN_ID))
+                    val taskName = it.getString(it.getColumnIndex(COLUMN_TASK_NAME))
+                    val taskCategory = it.getString(it.getColumnIndex(COLUMN_TASK_CAT))
+                    val timeRange = it.getString(it.getColumnIndex(COLUMN_TIME_RANGE))
+                    val duration = it.getInt(it.getColumnIndex(COLUMN_DURATION))
+
+                    val task = TaskInfo(taskID, taskName, taskCategory, timeRange, duration)
+                    tasks.add(task)
+                }
             }
+        } catch (e: Exception) {
+            // Handle any exceptions that might occur during database operations
+            Log.e("Database_Example", "Error fetching tasks for date: $date", e)
+        } finally {
+            db.close()
         }
 
-        db.close()
         return tasks
     }
 

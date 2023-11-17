@@ -39,15 +39,12 @@ class Fragment_History : Fragment() {
         // DATE CLICKS
         val calendarView: CalendarView = view.findViewById(R.id.calendarView)
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            val formattedDate = "$dayOfMonth/${month + 1}/$year"
-            Toast.makeText(requireContext(), "Selected Date: $formattedDate", Toast.LENGTH_SHORT).show()
+            val formattedDate = "$year-${month + 1}-$dayOfMonth"
             // Retrieve tasks for the selected date from the database
             val taskInfo = dbHelper.getTasksForDate(formattedDate)
-            // Update the RecyclerView with the retrieved tasks
             historyAdapter.updateData(taskInfo)
+
         }
-
     }
-
 }
 
