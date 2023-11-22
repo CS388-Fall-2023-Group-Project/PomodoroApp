@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +6,186 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Fragment Home" />
+        android:layout_height="wrap_content"
+        android:text="Let's Study! What's your goal for the day?"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        />
+
+    <EditText
+        android:id="@+id/editTextStudyGoal"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/edittext_outline"
+        android:hint="ex: Revise Chapter 2"
+        android:paddingStart="20dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="What subject are you studying?"
+        android:gravity="center"
+        android:layout_marginTop="200dp"
+        />
+
+
+    <Spinner
+        android:id="@+id/subjectSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="230dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:paddingStart="10dp"
+        android:entries="@array/subject_array"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="What Pomodoro Ratio do you want to use?"
+        android:gravity="center"
+        android:layout_marginTop="300dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="330dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp">
+
+        <!-- Box 1 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="8dp">
+
+            <Spinner
+                android:id="@+id/studyOn"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:entries="@array/study_on_array"
+                android:background="@drawable/study_on_spinner"
+                android:spinnerMode="dropdown"
+                android:dropDownVerticalOffset="40dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="study on"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <!-- Box 2 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="8dp">
+
+            <Spinner
+                android:id="@+id/studyOff"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:entries="@array/study_off_array"
+                android:background="@drawable/rounds_spinner"
+                android:spinnerMode="dropdown"
+                android:dropDownVerticalOffset="40dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="study off"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <!-- Box 3 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="8dp">
+
+            <Spinner
+                android:id="@+id/rounds"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:entries="@array/rounds_array"
+                android:background="@drawable/study_off_spinner"
+                android:spinnerMode="dropdown"
+                android:dropDownVerticalOffset="40dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="rounds"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="With these settings, you are set to finish your session at:"
+        android:gravity="center"
+        android:layout_marginTop="500dp"
+        />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginEnd="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="rounds"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/timeFinish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="00:00"
+        android:gravity="center"
+        android:textSize="50sp"
+        android:layout_marginTop="530dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="START STUDYING"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/green_button_background"
+        android:gravity="center"
+        android:layout_marginTop="600dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:padding="16dp"
+        android:textSize="18sp"
+    />
+
 
 </FrameLayout>
