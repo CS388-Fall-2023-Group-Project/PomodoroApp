@@ -40,5 +40,6 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.fragmentContainer, fragment)
             .addToBackStack(null)
             .commit()
+
     }
 }
