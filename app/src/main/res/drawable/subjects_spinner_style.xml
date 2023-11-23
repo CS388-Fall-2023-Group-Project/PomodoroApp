@@ -1,0 +1,33 @@
+<!-- res/layout/spinner_item_layout.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:gravity="center" />
+
+    <layer-list>
+        <item>
+            <shape>
+                <solid android:color="#00FFFFFF" />
+                <corners android:radius="20dp" />
+            </shape>
+        </item>
+        <!-- Outline -->
+        <item>
+            <shape>
+                <solid android:color="#00FFFFFF" />
+                <corners android:radius="20dp" />
+                <stroke
+                    android:width="2dp"
+                    android:color="#808080" />
+            </shape>
+        </item>
+    </layer-list>
+
+</LinearLayout>

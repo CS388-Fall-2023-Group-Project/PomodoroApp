@@ -1,0 +1,29 @@
+<!-- res/drawable/edittext_outline.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background with grey color -->
+    <item>
+        <shape>
+            <solid android:color="#CCCCCC" /> <!-- Adjust the color as needed -->
+            <corners android:radius="20dp" /> <!-- Adjust the radius of the corners as needed -->
+        </shape>
+    </item>
+    <!-- Inner shadow -->
+    <item>
+        <shape>
+            <solid android:color="#33000000" /> <!-- Transparent color for the shadow -->
+            <corners android:radius="20dp" /> <!-- Adjust the radius of the corners as needed -->
+            <padding
+                android:left="1dp"
+                android:top="5dp"
+                android:right="1dp"
+                android:bottom="1dp" />
+        </shape>
+    </item>
+    <!-- Content -->
+    <item android:top="2dp">
+        <shape>
+            <solid android:color="#E1E1E1"></solid>
+            <corners android:radius="20dp" /> <!-- Adjust the radius of the corners as needed -->
+        </shape>
+    </item>
+</layer-list>
