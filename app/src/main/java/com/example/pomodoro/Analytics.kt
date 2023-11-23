@@ -4,27 +4,27 @@ package com.example.pomodoro
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.chartsdummy.R
-import com.example.chartsdummy.databinding.ActivityMainBinding
-import com.example.chartsdummy.utils.HorizontalChartXLabels
-import com.example.chartsdummy.utils.VerticalChartXLabels
-import com.example.chartsdummy.utils.horizontalChartData
-import com.example.chartsdummy.utils.verticalChartData
+
+import com.example.pomodoro.utils.HorizontalChartXLabels
+import com.example.pomodoro.utils.VerticalChartXLabels
+import com.example.pomodoro.utils.horizontalChartData
+import com.example.pomodoro.utils.verticalChartData
+
 import com.straiberry.android.charts.tooltip.PointTooltip
 import com.straiberry.android.charts.view.HorizontalBarChartView
 import java.util.Calendar
 import java.util.Date
 
 
-class Strats : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+class Analytics : AppCompatActivity() {
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+
 
         setupHorizontalChart()
         setupBarChart()
@@ -49,15 +49,7 @@ class Strats : AppCompatActivity() {
     private fun setupBarPercentChart() {
         // Prepare the tooltip to show on chart
         val pointTooltip = PointTooltip()
-        pointTooltip.onCreateTooltip(binding.content)
-        binding.barPercentChartWhitening.apply {
-            tooltip = pointTooltip
-            currentAverage = 20
-            average = 50
-            previousAverage = 30
-            createBarPercent()
-            disableTouchAndClick()
-        }
+
     }
 
     private fun setupBarChart() {
@@ -72,7 +64,6 @@ class Strats : AppCompatActivity() {
             ), listOf(6F, 7F, 2F, 6F, 7F, 10F, 20F)
         )
 
-        binding.barChartViewBrushing.animate(data)
     }
 
 
