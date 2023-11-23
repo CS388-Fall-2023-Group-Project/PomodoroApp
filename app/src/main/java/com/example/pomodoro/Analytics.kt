@@ -9,10 +9,12 @@ import com.example.pomodoro.utils.HorizontalChartXLabels
 import com.example.pomodoro.utils.VerticalChartXLabels
 import com.example.pomodoro.utils.horizontalChartData
 import com.example.pomodoro.utils.verticalChartData
+
 import com.straiberry.android.charts.tooltip.PointTooltip
 import com.straiberry.android.charts.view.HorizontalBarChartView
 import java.util.Calendar
 import java.util.Date
+
 
 
 class Analytics : AppCompatActivity() {
@@ -61,7 +63,6 @@ class Analytics : AppCompatActivity() {
                 "Monday", "Tuesday", "Wensdasy", "Thursday", "Friday", "Saturday", "Sunday"
             ), listOf(6F, 7F, 2F, 6F, 7F, 10F, 20F)
         )
-
 
     }
 

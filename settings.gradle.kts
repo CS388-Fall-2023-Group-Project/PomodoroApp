@@ -4,6 +4,7 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
         maven("https://jitpack.io")
+
     }
 }
 dependencyResolutionManagement {
@@ -12,9 +13,9 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://jitpack.io")
+
     }
 }
 
-rootProject.name = "Pomodoro"
+rootProject.name = "ChartsDummy"
 include(":app")
- 
