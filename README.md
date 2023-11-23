@@ -92,3 +92,30 @@ https://www.figma.com/file/orV5IoLypk69jQMqeaO5Df/Pomodoro?type=design&node-id=5
 <img src=PrototypeGif.gif title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 <br>
+
+
+# Milestone 2 -Project planning (Unit 8)
+All sprints were planned for the project
+## GitHub Project board
+    ![image](https://github.com/CS388-Fall-2023-Group-Project/PomodoroApp/assets/121907145/67b4a59a-836b-4ebd-b71f-f4d800a8de86)
+
+## Issue cards
+Milestone 1
+- ![image](https://github.com/CS388-Fall-2023-Group-Project/PomodoroApp/assets/121907145/137e9636-b579-4734-a0ff-469f4b6e40d7)
+Milestone 2
+- ![image](https://github.com/CS388-Fall-2023-Group-Project/PomodoroApp/assets/121907145/28e4b80f-4247-401a-bf97-97c2570acfc6)
+Milestone 3
+-![image](https://github.com/CS388-Fall-2023-Group-Project/PomodoroApp/assets/121907145/b7dc93c5-4eb4-4d42-ab6c-f00e17aa4990)
+Milestone 4
+- 
+## Issues worked on this sprint (sprint 1)
+
+- Bottom Nav BAr
+- Break Page
+- Loading Screen
+- Timer
+- Media Break Page
+- History Page
+- Timer Page
+
+<br>

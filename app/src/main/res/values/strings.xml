@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Pomodoro</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string-array name="subject_array">
         <item>Math</item>
         <item>Reading</item>
@@ -56,5 +55,4 @@
         <item>7 rounds</item>
         <item>8 rounds</item>
     </string-array>
-
 </resources>
