@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
     <!-- TOP NAVIGATION BAR -->
     <LinearLayout
-        android:id="@+id/bannerLayout"
+        android:id="@+id/topNavBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
@@ -33,89 +33,28 @@
             android:textStyle="bold"/>
     </LinearLayout>
 
-    <!-- BOTTOM NAVIGATION BAR -->
-    <LinearLayout
-        android:id="@+id/tabBar"
-        android:layout_width="410dp"
-        android:layout_height="102dp"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+    <!-- FRAGMENT CONTAINER -->
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/topNavBar"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Tab 1 Button with Icon -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:contentDescription="Tab 1 Icon"
-                android:src="@drawable/icon_user" />
-
-            <Button
-                android:id="@+id/TabStartStudyingButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@android:color/transparent"
-                android:fontFamily="@font/inter_medium"
-                android:text="Start"
-                android:textColor="#000"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <!-- Tab 2 Button with Icon -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/icon_analytics"
-                android:contentDescription="Tab 2 Icon" />
-
-            <Button
-                android:id="@+id/TabAnalyticsButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Analytics"
-                android:textColor="#000"
-                android:fontFamily="@font/inter_medium"
-                android:textSize="13sp"
-                android:backgroundTint="@android:color/transparent"/>
-        </LinearLayout>
-
-        <!-- Tab 3 Button with Icon -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/icon_history"
-                android:contentDescription="Tab 3 Icon" />
-
-            <Button
-                android:id="@+id/TabHistoryButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="History"
-                android:textColor="#000"
-                android:fontFamily="@font/inter_medium"
-                android:textSize="13sp"
-                android:backgroundTint="@android:color/transparent"/>
-        </LinearLayout>
-    </LinearLayout>
+    <!-- BOTTOM NAV BAR -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:itemBackground="@color/white"
+        app:itemTextColor="@drawable/bottom_nav_colors"
+        app:itemIconTint="@drawable/bottom_nav_icon_tint"
+        app:menu="@menu/bottom_navigation_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:labelVisibilityMode="labeled"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
