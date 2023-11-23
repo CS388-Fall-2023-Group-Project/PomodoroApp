@@ -17,12 +17,13 @@ class MainActivity : AppCompatActivity() {
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_history -> {
-                    loadFragment(Fragment_Home())
+                    loadFragment(Fragment_History())
                     return@OnNavigationItemSelectedListener true
                 }
             }
             false
         }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         // Load the initial fragment
         loadFragment(Fragment_Home())
     }
+
     // Method to load a fragment
     fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
