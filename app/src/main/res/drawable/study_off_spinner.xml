@@ -1,0 +1,5 @@
+<!-- res/drawable/rounded_spinner_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="20dp" /> <!-- Adjust the radius as needed -->
+    <solid android:color="#B0C3D4" /> <!-- Change the color as needed -->
+</shape>
