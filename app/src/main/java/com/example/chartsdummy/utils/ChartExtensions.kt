@@ -1,4 +1,4 @@
-package com.example.pomodoro.utils
+package com.example.chartsdummy.utils
 
 import android.content.Context
 import android.graphics.Bitmap

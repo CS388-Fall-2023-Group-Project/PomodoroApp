@@ -17,6 +17,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Pomodoro"
+rootProject.name = "ChartsDummy"
 include(":app")
- 
