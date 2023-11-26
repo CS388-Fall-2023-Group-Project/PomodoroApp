@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment_Home">
+    tools:context=".SetStudyGoals">
 
     <TextView
         android:layout_width="match_parent"
@@ -134,19 +134,22 @@
                 android:gravity="center" />
 
         </LinearLayout>
-
-
-
-
     </LinearLayout>
 
 
     <TextView
+        android:id="@+id/calculateStudyTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="With these settings, you are set to finish your session at:"
+        android:text="Tap to calculate Study Time"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/blue_button_background"
         android:gravity="center"
-        android:layout_marginTop="500dp"
+        android:layout_marginTop="470dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:padding="16dp"
+        android:textSize="18sp"
         />
     <LinearLayout
         android:layout_width="0dp"
@@ -174,6 +177,7 @@
         />
 
     <TextView
+        android:id="@+id/startStudyingButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="START STUDYING"

@@ -2,8 +2,6 @@ package com.example.pomodoro
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -13,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    loadFragment(Fragment_Home())
+                    loadFragment(SetStudyGoals())
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_history -> {
@@ -32,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
         // Load the initial fragment
-        loadFragment(Fragment_Home())
+        loadFragment(SetStudyGoals())
     }
     // Method to load a fragment
     fun loadFragment(fragment: Fragment) {
