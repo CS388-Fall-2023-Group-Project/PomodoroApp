@@ -3,7 +3,6 @@ package com.example.pomodoro
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -20,9 +19,9 @@ class TimerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.study_timer)
 
-        progressBar = findViewById(R.id.timer)
-        timerText = findViewById(R.id.timerText)
-        exitButton = findViewById(R.id.exitButton)
+        progressBar = findViewById(R.id.progressbar)
+        timerText = findViewById(R.id.timerTexts)
+        exitButton = findViewById(R.id.exitStudy)
 
         val totalTimeInMillis = 60000L // 1 minute
         val interval = 1000L // 1 second
@@ -40,8 +39,8 @@ class TimerActivity : AppCompatActivity() {
             },
             onFinish = {
                 // Timer finished, handle it as needed
-                progressBar.progress = 0
-                timerText.text = "00:00:00"
+               val intent= Intent(this@TimerActivity,BreakActivity::class.java)
+                startActivity(intent)
             }
         )
 
@@ -51,9 +50,8 @@ class TimerActivity : AppCompatActivity() {
 
         exitButton.setOnClickListener {
             // Navigate back to the home fragment or activity
-            val intent = Intent(this, SetStudyGoals::class.java)
-            startActivity(intent)
-            finish() // Finish the current activity
+            finish()
+
         }
     }
 

@@ -54,7 +54,8 @@ class SetStudyGoals : Fragment() {
             // Calculate and set the time finish
             calculateAndSetTimeFinish(selectedStudyOn, selectedStudyOff, selectedRounds)
 
-            startActivity(Intent(requireActivity(),TimerActivity::class.java))
+           val intent= Intent(requireActivity().applicationContext,TimerActivity::class.java)
+            startActivity(intent)
 
 
 
