@@ -36,12 +36,12 @@ class MainActivity : AppCompatActivity() {
         // Load the initial fragment
         loadFragment(SetStudyGoals())
     }
+
     // Method to load a fragment
     fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
             .addToBackStack(null)
             .commit()
-
     }
 }
