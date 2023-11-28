@@ -129,16 +129,16 @@ Milestone 4
 
 ## Completed user stories
 
--Screen/Fragment layouts
--Bottom Navigation Bar
--Timer page
--Study Goal Page
--Basic Study Break page
-- Analytics
-- History/Calandar
-- Timer with Progress Bar
-- Timer works based on user input based on Study On Choice
-- Navigation between Study Goal, Timer Study Page, and Break Page
+-[x]Screen/Fragment layouts
+-[x]Bottom Navigation Bar
+-[x]Timer page
+-[x]Study Goal Page
+-[x]Basic Study Break page
+- [x]Analytics
+- [x]History/Calandar
+- [x]Timer with Progress Bar
+- [x]Timer works based on user input based on Study On Choice
+- [x]Navigation between Study Goal, Timer Study Page, and Break Page
 
 
 ## Next Steps
