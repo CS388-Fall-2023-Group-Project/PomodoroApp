@@ -23,7 +23,15 @@ class TimerActivity : AppCompatActivity() {
         timerText = findViewById(R.id.timerTexts)
         exitButton = findViewById(R.id.exitStudy)
 
-        val totalTimeInMillis = 60000L // 1 minute
+        val studyGoal = intent.getStringExtra("studyGoal")
+        val selectedSubject = intent.getStringExtra("selectedSubject")
+        val selectedStudyOn = intent.getStringExtra("selectedStudyOn")
+        val selectedStudyOff = intent.getStringExtra("selectedStudyOff")
+        val selectedRounds = intent.getStringExtra("selectedRounds")
+
+        val studyOnMinutes = selectedStudyOn?.let { extractNumberFromString(it) } ?: 0
+
+        val totalTimeInMillis = studyOnMinutes.toLong() // 1 minute
         val interval = 1000L // 1 second
 
         countdownTimer = CountdownTimerHelper(
@@ -68,4 +76,20 @@ class TimerActivity : AppCompatActivity() {
 
         return String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }
+
+    private fun extractNumberFromString(timeString: String): Long {
+        val regex = """(\d+) (\w+)""".toRegex()
+        val matchResult = regex.find(timeString)
+        val value = matchResult?.groupValues?.get(1)?.toIntOrNull() ?: 0
+        val unit = matchResult?.groupValues?.get(2)?.toLowerCase() ?: "minutes"
+
+        return when (unit) {
+            "seconds" -> value * 1000L
+            "minutes" -> value * 60 * 1000L
+            "hours" -> value * 60 * 60 * 1000L
+            else -> throw IllegalArgumentException("Unsupported time unit: $unit")
+        }
+    }
+
+
 }
