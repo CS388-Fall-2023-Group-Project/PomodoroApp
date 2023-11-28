@@ -23,7 +23,7 @@ class AnalyticsFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_analytics, container, false)
     }
-
+// this is a comment to teach about git
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
