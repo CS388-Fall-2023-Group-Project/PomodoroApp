@@ -129,11 +129,11 @@ Milestone 4
 
 ## Completed user stories
 
--[x] Screen/Fragment layouts
--[x] Bottom Navigation Bar
--[x] Timer page
--[x] Study Goal Page
--[x] Basic Study Break page
+- [x] Screen/Fragment layouts
+- [x] Bottom Navigation Bar
+- [x] Timer page
+- [x] Study Goal Page
+- [x] Basic Study Break page
 - [x] Analytics
 - [x] History/Calandar
 - [x] Timer with Progress Bar
