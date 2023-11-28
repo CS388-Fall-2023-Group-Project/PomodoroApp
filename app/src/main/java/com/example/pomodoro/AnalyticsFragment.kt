@@ -31,7 +31,7 @@ class AnalyticsFragment : Fragment() {
         setupBarChart(view)
         setupBarPercentChart()
     }
-
+// Comment
     private fun setupHorizontalChart(view: View) {
         val data = horizontalChartData(
             requireContext(), HorizontalChartXLabels(
