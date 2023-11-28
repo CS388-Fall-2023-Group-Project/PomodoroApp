@@ -13,11 +13,7 @@ import java.util.Calendar
 import java.util.Date
 
 
-class Strats : AppCompatActivity() {
-
-
-
-
+class Analytics : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

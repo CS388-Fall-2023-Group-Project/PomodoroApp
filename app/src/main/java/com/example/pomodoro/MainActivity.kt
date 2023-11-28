@@ -14,6 +14,10 @@ class MainActivity : AppCompatActivity() {
                     loadFragment(SetStudyGoals())
                     return@OnNavigationItemSelectedListener true
                 }
+                R.id.navigation_analytics -> {
+                    loadFragment(Analytics())
+                    return@OnNavigationItemSelectedListener true
+                }
                 R.id.navigation_history -> {
                     loadFragment(Fragment_History())
                     return@OnNavigationItemSelectedListener true
