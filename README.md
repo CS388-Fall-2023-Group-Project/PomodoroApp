@@ -129,9 +129,26 @@ Milestone 4
 
 ## Completed user stories
 
-- List the completed user stories from this unit
-- List any pending user stories / any user stories you decided to cut
-from the original requirements
+-Screen/Fragment layouts
+-Bottom Navigation Bar
+-Timer page
+-Study Goal Page
+-Basic Study Break page
+- Analytics
+- History/Calandar
+- Timer with Progress Bar
+- Timer works based on user input based on Study On Choice
+- Navigation between Study Goal, Timer Study Page, and Break Page
+
+
+## Next Steps
+-Video API, 
+- Timer should work fully with rest of user inputs, 
+- Firebase sync video and timer
+- notifcations of user exiting app
+
+
+
 
 [Add video/gif of your current application that shows build progress]
 <img src="PomodoroUnit9.gif" width=600>
