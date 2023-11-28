@@ -31,6 +31,14 @@ class TimerActivity : AppCompatActivity() {
 
         val studyOnMinutes = selectedStudyOn?.let { extractNumberFromString(it) } ?: 0
 
+
+        val restartTimer = intent.getBooleanExtra("restartTimer", false)
+
+        // If the flag is true, restart the timer
+        if (restartTimer) {
+            restartTimer()
+        }
+
         val totalTimeInMillis = studyOnMinutes.toLong() // 1 minute
         val interval = 1000L // 1 second
 
@@ -75,6 +83,16 @@ class TimerActivity : AppCompatActivity() {
         val seconds = TimeUnit.MILLISECONDS.toSeconds(millis) % 60
 
         return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
+
+    private fun restartTimer() {
+        // Your logic to restart the timer goes here
+        // For example, create a new instance of CountdownTimerHelper and start it
+        countdownTimer.cancel()
+
+        // Start a new timer
+        countdownTimer.start()
+
     }
 
     private fun extractNumberFromString(timeString: String): Long {
