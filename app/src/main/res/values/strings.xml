@@ -12,6 +12,7 @@
 
     <!-- Study durations -->
     <string-array name="study_on_array">
+        <item> 1 minutes</item>
         <item>15 minutes</item>
         <item>20 minutes</item>
         <item>25 minutes</item>
@@ -38,6 +39,7 @@
 
     <!-- Break durations -->
     <string-array name="study_off_array">
+        <item> 1 minutes </item>
         <item>5 minutes</item>
         <item>10 minutes</item>
         <item>15 minutes</item>

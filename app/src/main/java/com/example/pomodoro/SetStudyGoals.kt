@@ -1,5 +1,6 @@
 package com.example.pomodoro
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -52,6 +53,20 @@ class SetStudyGoals : Fragment() {
 
             // Calculate and set the time finish
             calculateAndSetTimeFinish(selectedStudyOn, selectedStudyOff, selectedRounds)
+
+           val intent= Intent(requireActivity(),TimerActivity::class.java).apply {
+               putExtra("studyGoal", studyGoal)
+               putExtra("selectedSubject", selectedSubject)
+               putExtra("selectedStudyOn", selectedStudyOn)
+               putExtra("selectedStudyOff", selectedStudyOff)
+               putExtra("selectedRounds", selectedRounds)
+           }
+            startActivity(intent)
+
+
+
+
+
         }
 
         // Set a click listener for the "Tap to calculate Study Time" button
