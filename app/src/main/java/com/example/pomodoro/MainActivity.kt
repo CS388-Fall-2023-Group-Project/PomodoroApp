@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_analytics -> {
-                    loadFragment(Analytics())
+                    loadFragment(AnalyticsFragment())
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_history -> {
