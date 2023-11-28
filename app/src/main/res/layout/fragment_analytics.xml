@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AnalyticsFragment">
+
+
+    <com.straiberry.android.charts.view.HorizontalBarChartView
+            android:id="@+id/horizontalBarChartViewBrushingDigit"
+            android:layout_width="match_parent"
+            android:layout_height="236dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="false"
+            android:focusable="false"
+
+            app:chart_barsRadius="17dp"
+            app:chart_grid="full"
+            app:chart_horizontal_y_label_type="fromZeroToSeven"
+            app:chart_labelsSize="8sp"
+            app:chart_spacing="13dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="76dp"
+            android:text="🔥🔥 Your on a 10 Study Streak!!! 🔥🔥"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.straiberry.android.charts.view.BarChartView
+            android:id="@+id/barChartViewBrushing"
+            android:layout_width="394dp"
+            android:layout_height="189dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="false"
+            android:focusable="false"
+            app:chart_axis="xy"
+            app:chart_barsRadius="17dp"
+            app:chart_grid="full"
+            app:chart_labelsSize="8dp"
+            app:chart_spacing="20dp" />
+
+        <com.straiberry.android.charts.view.BarPercentChartView
+            android:id="@+id/barPercentChartWhitening"
+            android:layout_width="match_parent"
+            android:layout_height="191dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:layoutDirection="ltr"
+
+            app:chart_axis="x"
+            app:chart_labelsSize="10sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <com.straiberry.android.charts.view.LineChartView
+            android:id="@+id/linearChartViewOralHygiene"
+            android:layout_width="match_parent"
+            android:layout_height="219dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="8dp"
+            android:layoutDirection="ltr"
+            app:chart_grid="vertical"
+            app:chart_gridEffect="dashed"
+            app:chart_gridStrokeWidth="1dp"
+            app:chart_labelsSize="8sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/barChartViewBrushing" />
+
+
+
+
+</FrameLayout>
