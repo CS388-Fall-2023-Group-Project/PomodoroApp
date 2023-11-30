@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.example.pomodoro"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.pomodoro"
         minSdk = 23
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
