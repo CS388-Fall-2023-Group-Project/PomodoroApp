@@ -1,6 +1,7 @@
 package com.example.pomodoro
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 class Fragment_History : Fragment() {
 
-    private lateinit var dbHelper: Database_Example
+    private lateinit var dbHelper: MainDatabase
     private lateinit var historyRecyclerView: RecyclerView
-    private lateinit var historyAdapter: HistoryRVAdapter
+    private lateinit var historyAdapter: Adapter_HistoryRecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,12 +28,11 @@ class Fragment_History : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        dbHelper = Database_Example(requireContext())
+        dbHelper = MainDatabase(requireContext())
         historyRecyclerView = view.findViewById(R.id.historyRecyclerView)
 
         // RecyclerView setup
-        historyAdapter = HistoryRVAdapter()
+        historyAdapter = Adapter_HistoryRecyclerView()
         historyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         historyRecyclerView.adapter = historyAdapter
 
@@ -42,9 +42,13 @@ class Fragment_History : Fragment() {
             val formattedDate = "$year-${month + 1}-$dayOfMonth"
             // Retrieve tasks for the selected date from the database
             val taskInfo = dbHelper.getTasksForDate(formattedDate)
+            Log.d("MainDatabase", "Date: $formattedDate")
+            Log.d("MainDatabase", "TASK DETAILS: $taskInfo")
             historyAdapter.updateData(taskInfo)
 
         }
     }
+
+
 }
 

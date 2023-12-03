@@ -1,12 +1,19 @@
 package com.example.pomodoro
 
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class TimerActivity : AppCompatActivity() {
@@ -15,6 +22,8 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var timerText: TextView
     private lateinit var countdownTimer: CountdownTimerHelper
     private lateinit var exitButton: Button
+
+    private val sharedViewModel: SharedViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.study_timer)
@@ -30,7 +39,6 @@ class TimerActivity : AppCompatActivity() {
         val selectedRounds = intent.getStringExtra("selectedRounds")
 
         val studyOnMinutes = selectedStudyOn?.let { extractNumberFromString(it) } ?: 0
-
 
         val restartTimer = intent.getBooleanExtra("restartTimer", false)
 
@@ -65,6 +73,11 @@ class TimerActivity : AppCompatActivity() {
 
 
         exitButton.setOnClickListener {
+            val currentTimeEnd = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
+
+            sharedViewModel.currentTimeEnd.value = currentTimeEnd
+            Log.e("MainDatabase", "Exit Button at $currentTimeEnd")
+
             // Navigate back to the home fragment or activity
             finish()
 
