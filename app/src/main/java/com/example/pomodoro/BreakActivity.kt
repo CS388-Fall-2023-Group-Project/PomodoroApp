@@ -49,7 +49,7 @@ class BreakActivity: AppCompatActivity() {
         webView.settings.javaScriptEnabled = true
 
         // Load the URL with the iframe content
-        val iframeContent = "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/SvPKFsCiMsw?si=aX39cuiOMQhc6voH\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>"
+        val iframeContent = "<iframe width=\"400\" height=\"315\" src=\"https://www.youtube.com/embed/videoseries?si=wRozd1-JgL4x5jja&amp;list=PLipSZg1JNsC-w8Ivhg5eYF4quTgPfNtrw\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>"
         webView.loadData(iframeContent, "text/html", "utf-8")
 
         // Set a WebViewClient to handle navigation events within the WebView
