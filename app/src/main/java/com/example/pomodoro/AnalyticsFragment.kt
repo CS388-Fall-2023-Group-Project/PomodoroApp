@@ -18,8 +18,6 @@ import java.util.Calendar
 import java.util.Date
 
 class AnalyticsFragment : Fragment() {
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
