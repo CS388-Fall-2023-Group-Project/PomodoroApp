@@ -82,6 +82,7 @@ class TimerActivity : AppCompatActivity() {
 
         exitButton.setOnClickListener {
             val currentTimeEnd = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
+
             insertDataIntoDatabase(currentTimeEnd)
             Log.e("MainDatabase", "Exit Button at $currentTimeEnd")
 
@@ -92,6 +93,7 @@ class TimerActivity : AppCompatActivity() {
     }
 
     private fun insertDataIntoDatabase(currentTimeEnd: String) {
+        // OLD DATA FROM SetStudyGoals -----------------------------
         val currentDate = intent.getStringExtra("currentDate")?: ""
         val studyGoal = intent.getStringExtra("studyGoal")?: ""
         val selectedSubject = intent.getStringExtra("selectedSubject")?: ""
@@ -99,17 +101,15 @@ class TimerActivity : AppCompatActivity() {
         val selectedStudyOff = intent.getStringExtra("selectedStudyOff")?: ""
         val currentTimeStart = intent.getStringExtra("currentTimeStart")?: ""
         val selectedRounds = intent.getStringExtra("selectedRounds")?: ""
-
-        // Convert the duration from milliseconds to hours
+        // NEW DATA ------------------------------------------------
+        // Duration: Convert the duration from milliseconds to hours
         val startMillis = SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(currentTimeStart)?.time ?: 0
         val endMillis = SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(currentTimeEnd)?.time ?: 0
         val durationInMillis = endMillis - startMillis
         val durationInHours = TimeUnit.MILLISECONDS.toHours(durationInMillis).toInt()
-
-        // Fill in Time Range based on collected times
+        // Time Range: Fill in Time Range based on collected times
         val timeRange = "$currentTimeStart - $currentTimeEnd"
-
-        // Insert data into MainDatabase
+        // INSERT TO MAINDATABASE ----------------------------------
         mainDatabase.insertStudySession(
             currentDate,
             studyGoal,

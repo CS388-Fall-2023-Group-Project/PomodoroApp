@@ -111,7 +111,6 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
 
         return tasks
     }
-
     fun insertStudySession(
         date: String,
         taskName: String,
