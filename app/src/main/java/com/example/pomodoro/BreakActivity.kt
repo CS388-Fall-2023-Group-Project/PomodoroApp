@@ -43,7 +43,7 @@ class BreakActivity: AppCompatActivity() {
 
 
         val webView: WebView = findViewById(R.id.webView)
-        exitButton = findViewById(R.id.return_btn)
+        exitButton = findViewById(R.id.return_btn2)
 
         // Enable JavaScript in the WebView
         webView.settings.javaScriptEnabled = true
