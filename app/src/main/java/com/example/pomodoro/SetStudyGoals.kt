@@ -13,11 +13,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -61,6 +57,9 @@ class SetStudyGoals : Fragment() {
             val selectedStudyOff = studyOffSpinner.selectedItem.toString()
             val selectedRounds = roundsSpinner.selectedItem.toString()
 
+            val currentDate = SimpleDateFormat("yyyy-MM-d", Locale.getDefault()).format(Date())
+            val currentTimeStart = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
+
             // -------------------- INITIALIZE INTENT --------------------
             // Log or save the selected values (You can replace this with your desired functionality)
             logSelectedValues(studyGoal, selectedSubject, selectedStudyOn, selectedStudyOff, selectedRounds)
@@ -69,34 +68,16 @@ class SetStudyGoals : Fragment() {
             calculateAndSetTimeFinish(selectedStudyOn, selectedStudyOff, selectedRounds)
 
             val intent= Intent(requireActivity(),TimerActivity::class.java).apply {
-               putExtra("studyGoal", studyGoal)
-               putExtra("selectedSubject", selectedSubject)
-               putExtra("selectedStudyOn", selectedStudyOn)
-               putExtra("selectedStudyOff", selectedStudyOff)
-               putExtra("selectedRounds", selectedRounds)
+                putExtra("studyGoal", studyGoal)
+                putExtra("selectedSubject", selectedSubject)
+                putExtra("selectedStudyOn", selectedStudyOn)
+                putExtra("selectedStudyOff", selectedStudyOff)
+                putExtra("currentDate", currentDate)
+                putExtra("currentTimeStart", currentTimeStart)
+                putExtra("selectedRounds", selectedRounds)
             }
             startActivity(intent)
 
-            // --------------------- ADD TO DATABASE ---------------------
-            // Get the current date and time
-            val currentDate = SimpleDateFormat("yyyy-MM-d", Locale.getDefault()).format(Date())
-            val currentTimeStart = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
-
-            // Calculate duration in minutes
-            val studyOnMinutes = extractNumberFromString(selectedStudyOn)
-            val studyOffMinutes = extractNumberFromString(selectedStudyOff)
-            val duration = studyOffMinutes - studyOnMinutes
-            // Insert the study session into the database
-            val mainDatabase = MainDatabase(requireContext())
-            mainDatabase.insertStudySession(
-                currentDate,
-                studyGoal,
-                selectedSubject,
-                "$currentTimeStart - $currentTimeStart",
-                duration,
-                selectedRounds
-            )
-            Log.e("MainDatabase", "Inserted $currentTimeStart - $currentTimeStart")
 
         }
 

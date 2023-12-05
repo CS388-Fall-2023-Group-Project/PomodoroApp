@@ -42,8 +42,8 @@ class Fragment_History : Fragment() {
             val formattedDate = "$year-${month + 1}-$dayOfMonth"
             // Retrieve tasks for the selected date from the database
             val taskInfo = dbHelper.getTasksForDate(formattedDate)
-            Log.d("MainDatabase", "Date: $formattedDate")
-            Log.d("MainDatabase", "TASK DETAILS: $taskInfo")
+            Log.d("MainDatabase", "Fragment_History getTasksForDate: $formattedDate")
+            Log.d("MainDatabase", "Fragment_History getTasksForDate TASK DETAILS: $taskInfo")
             historyAdapter.updateData(taskInfo)
 
         }

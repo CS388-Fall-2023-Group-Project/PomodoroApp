@@ -22,12 +22,13 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         const val COLUMN_SUBJECT = "Subject"
         const val COLUMN_STUDYON = "StudyOn"
         const val COLUMN_STUDYOFF = "StudyOff"
-        const val COLUMN_TIME_RANGE = "TimeRange"
+        const val COLUMN_CURRENT_TIME_START = "TimeStart"
+        const val COLUMN_CURRENT_TIME_END = "TimeEnd"
+        const val COLUMN_TIMERANGE = "TimeRange"
         const val COLUMN_DURATION = "Duration"
         const val COLUMN_ROUNDS = "Rounds"
         const val DEFAULT_ROW_ID = 1
     }
-
     override fun onCreate(db: SQLiteDatabase?) {
         val createTableTaskDetails = """
             CREATE TABLE $TABLE_TASKDETAILS (
@@ -37,7 +38,9 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
                 $COLUMN_SUBJECT STRING,
                 $COLUMN_STUDYON STRING,
                 $COLUMN_STUDYOFF STRING,
-                $COLUMN_TIME_RANGE STRING,
+                $COLUMN_CURRENT_TIME_START STRING,
+                $COLUMN_CURRENT_TIME_END STRING,
+                $COLUMN_TIMERANGE STRING,
                 $COLUMN_DURATION INT,
                 $COLUMN_ROUNDS STRING
             )
@@ -56,7 +59,11 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
             put(COLUMN_ID, DEFAULT_ROW_ID)
             put(COLUMN_TASK_NAME, "Revise for exam")
             put(COLUMN_SUBJECT, "Math")
-            put(COLUMN_TIME_RANGE, "9:00 - 11:00")
+            put(COLUMN_STUDYON, "1")
+            put(COLUMN_STUDYOFF, "1")
+            put(COLUMN_CURRENT_TIME_START,"9:00 AM")
+            put(COLUMN_CURRENT_TIME_END,"11:00 AM")
+            put(COLUMN_TIMERANGE, "10:00 AM - 11:00 AM")
             put(COLUMN_DATE, "2023-11-13")
             put(COLUMN_DURATION, 2)
             put(COLUMN_ROUNDS, "1")
@@ -89,7 +96,7 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
                     val taskID = it.getInt(it.getColumnIndex(MainDatabase.COLUMN_ID))
                     val taskName = it.getString(it.getColumnIndex(MainDatabase.COLUMN_TASK_NAME))
                     val taskCategory = it.getString(it.getColumnIndex(MainDatabase.COLUMN_SUBJECT))
-                    val timeRange = it.getString(it.getColumnIndex(MainDatabase.COLUMN_TIME_RANGE))
+                    val timeRange = it.getString(it.getColumnIndex(MainDatabase.COLUMN_TIMERANGE))
                     val duration = it.getInt(it.getColumnIndex(MainDatabase.COLUMN_DURATION))
 
                     val task = TaskInfo(taskID, taskName, taskCategory, timeRange, duration)
@@ -109,25 +116,26 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         date: String,
         taskName: String,
         subject: String,
-        timeRange: String,
+        studyOn: String,
+        studyOff: String,
+        currentTimeStart: String,
+        currentTimeEnd:String,
+        time_range: String,
         duration: Int,
-        rounds: String
+        rounds: String,
     ) {
-        val contentValues = ContentValues().apply {
+        val values = ContentValues().apply {
             put(COLUMN_DATE, date)
             put(COLUMN_TASK_NAME, taskName)
             put(COLUMN_SUBJECT, subject)
-            put(COLUMN_TIME_RANGE, timeRange)
+            put(COLUMN_STUDYON, studyOn)
+            put(COLUMN_STUDYOFF, studyOff)
+            put(COLUMN_CURRENT_TIME_START, currentTimeStart)
+            put(COLUMN_CURRENT_TIME_END, currentTimeEnd)
+            put(COLUMN_TIMERANGE, time_range)
             put(COLUMN_DURATION, duration)
             put(COLUMN_ROUNDS, rounds)
         }
-
-        writableDatabase.insertWithOnConflict(
-            TABLE_TASKDETAILS,
-            null,
-            contentValues,
-            SQLiteDatabase.CONFLICT_REPLACE
-        )
+        writableDatabase.insert(TABLE_TASKDETAILS, null, values)
     }
-
 }
