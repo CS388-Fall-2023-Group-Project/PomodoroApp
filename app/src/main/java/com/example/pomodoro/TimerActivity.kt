@@ -28,6 +28,9 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var roundCounter: TextView
 
     private var roundNumber =1
+
+
+
     private val mainDatabase: MainDatabase by lazy {
         MainDatabase(this)
     }
@@ -41,14 +44,31 @@ class TimerActivity : AppCompatActivity() {
         exitButton = findViewById(R.id.exitStudy)
         roundCounter = findViewById(R.id.roundCounterTV)
 
+
+
         val selectedStudyOn = intent.getStringExtra("selectedStudyOn")
+        val intentSelectedRoundsString = intent.getStringExtra("selectedRounds")
+
+
         val studyOnMinutes = selectedStudyOn?.let { extractNumberFromString(it) } ?: 0
         val restartTimer = intent.getBooleanExtra("restartTimer", false)
+
+        val intentSelectedRounds = intentSelectedRoundsString?.toIntOrNull() ?: 0
+
+
+        if (savedInstanceState != null) {
+            roundNumber = savedInstanceState.getInt("roundNumber", 1)
+
+        }
+
+        updateRoundCounterText()
+
 
         // If the flag is true, restart the timer
         if (restartTimer) {
             restartTimer()
         }
+
 
         val totalTimeInMillis = studyOnMinutes.toLong() // 1 minute
         val interval = 1000L // 1 second
@@ -68,10 +88,17 @@ class TimerActivity : AppCompatActivity() {
                 // Timer finished, handle it as needed
                 val intent= Intent(this@TimerActivity,BreakActivity::class.java)
                 startActivity(intent)
+                roundNumber++
             }
         )
 
-        // Start the countdown timer
+        if (roundNumber > intentSelectedRounds) {
+            roundNumber--;
+            finish()
+
+        }
+
+            // Start the countdown timer
         countdownTimer.start()
 
         exitButton.setOnClickListener {
@@ -95,8 +122,22 @@ class TimerActivity : AppCompatActivity() {
             finish()
 
         }
+
+
+
+
     }
 
+
+    private fun updateRoundCounterText() {
+        roundCounter.text = getString(R.string.round_counter, roundNumber)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // Save the current round number to restore it later
+        outState.putInt("roundNumber", roundNumber)
+    }
     private fun insertDataIntoDatabase(weekNumber: Int, weekMonday: String, currentTimeEnd: String) {
         // OLD DATA FROM SetStudyGoals -----------------------------
         val currentDate = intent.getStringExtra("currentDate")?: ""
