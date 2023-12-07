@@ -1,4 +1,3 @@
-// MainDatabase
 package com.example.pomodoro
 
 import android.annotation.SuppressLint
@@ -17,6 +16,7 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         private const val DATABASE_NAME = "database.db"
 
         const val TABLE_TASK_DETAILS = "tbl_TaskDetails"
+        const val TABLE_TASK_7DAYS = "tbl_Task7Days"
         const val COLUMN_ID = "Id"
         const val COLUMN_WEEK_NUMBER = "WeekNumber"
         const val COLUMN_WEEK_MONDAY = "WeekMonday"
@@ -57,6 +57,27 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         if (db != null) {
             insertDefaultRow(db)
         }
+
+        // Table to store tasks in the past 7 days
+        val createTableTask7Days = """
+            CREATE TABLE $TABLE_TASK_7DAYS (
+                $COLUMN_ID INTEGER PRIMARY KEY,
+                $COLUMN_WEEK_NUMBER INT,
+                $COLUMN_WEEK_MONDAY STRING,
+                $COLUMN_DATE STRING,
+                $COLUMN_TASK_NAME STRING,
+                $COLUMN_SUBJECT STRING,
+                $COLUMN_STUDY_ON STRING,
+                $COLUMN_STUDY_OFF STRING,
+                $COLUMN_CURRENT_TIME_START STRING,
+                $COLUMN_CURRENT_TIME_END STRING,
+                $COLUMN_TIME_RANGE STRING,
+                $COLUMN_DURATION INT,
+                $COLUMN_ROUNDS STRING
+            )
+        """.trimIndent()
+
+        db?.execSQL(createTableTask7Days)
     }
 
     private fun insertDefaultRow(db: SQLiteDatabase) {
@@ -84,11 +105,52 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         )
     }
 
-
-
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_TASK_DETAILS")
         onCreate(db)
+    }
+
+    fun insertStudySession(
+        weekNumber: Int,
+        weekMonday: String,
+        date: String,
+        taskName: String,
+        subject: String,
+        studyOn: String,
+        studyOff: String,
+        currentTimeStart: String,
+        currentTimeEnd:String,
+        timeRange: String,
+        duration: Int,
+        rounds: String,
+    ) {
+        val values = ContentValues().apply {
+            put(COLUMN_DATE, date)
+            put(COLUMN_TASK_NAME, taskName)
+            put(COLUMN_SUBJECT, subject)
+            put(COLUMN_STUDY_ON, studyOn)
+            put(COLUMN_STUDY_OFF, studyOff)
+            put(COLUMN_CURRENT_TIME_START, currentTimeStart)
+            put(COLUMN_CURRENT_TIME_END, currentTimeEnd)
+            put(COLUMN_TIME_RANGE, timeRange)
+            put(COLUMN_DURATION, duration)
+            put(COLUMN_ROUNDS, rounds)
+        }
+        Log.d("MainDatabase", "MainDatabase inserted weekNumber as: $weekNumber")
+        Log.d("MainDatabase", "MainDatabase inserted weekMonday as: $weekMonday")
+        writableDatabase.insert(TABLE_TASK_DETAILS, null, values)
+        writableDatabase.insert(TABLE_TASK_7DAYS, null, values)
+    }
+
+    fun deleteOutdatedTasks(sevenDaysFromDate: String) {
+        val db = writableDatabase
+        try {
+            db.delete(TABLE_TASK_7DAYS, "$COLUMN_DATE < ?", arrayOf(sevenDaysFromDate))
+        } catch (e: Exception) {
+            Log.e("MainDatabase", "Error deleting outdated tasks", e)
+        } finally {
+            db.close()
+        }
     }
     @SuppressLint("Range")
     fun getTasksForDate(date: String): List<TaskInfo> {
@@ -121,14 +183,14 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         return tasks
     }
     @SuppressLint("Range")
-    fun getTasksForWeek(weekNumber: Int): List<TaskInfo> {
+    fun getTasksForLast7Days(fromDate: String): List<TaskInfo> {
         val tasks = mutableListOf<TaskInfo>()
         val db = readableDatabase
 
-        val query = "SELECT * FROM ${MainDatabase.TABLE_TASK_DETAILS} WHERE ${MainDatabase.COLUMN_WEEK_NUMBER} = ?"
+        val query = "SELECT * FROM ${MainDatabase.TABLE_TASK_DETAILS} WHERE ${MainDatabase.COLUMN_DATE} >= ?"
 
         try {
-            val cursor = db.rawQuery(query, arrayOf(weekNumber.toString()))
+            val cursor = db.rawQuery(query, arrayOf(fromDate))
 
             cursor.use {
                 while (it.moveToNext()) {
@@ -143,42 +205,11 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
                 }
             }
         } catch (e: Exception) {
-            Log.e("MainDatabase", "Error fetching tasks for week number: $weekNumber", e)
+            Log.e("MainDatabase", "Error fetching tasks for the last 7 days from $fromDate", e)
         } finally {
             db.close()
         }
 
         return tasks
-    }
-
-    fun insertStudySession(
-        weekNumber: Int,
-        weekMonday: String,
-        date: String,
-        taskName: String,
-        subject: String,
-        studyOn: String,
-        studyOff: String,
-        currentTimeStart: String,
-        currentTimeEnd:String,
-        timeRange: String,
-        duration: Int,
-        rounds: String,
-    ) {
-        val values = ContentValues().apply {
-            put(COLUMN_DATE, date)
-            put(COLUMN_TASK_NAME, taskName)
-            put(COLUMN_SUBJECT, subject)
-            put(COLUMN_STUDY_ON, studyOn)
-            put(COLUMN_STUDY_OFF, studyOff)
-            put(COLUMN_CURRENT_TIME_START, currentTimeStart)
-            put(COLUMN_CURRENT_TIME_END, currentTimeEnd)
-            put(COLUMN_TIME_RANGE, timeRange)
-            put(COLUMN_DURATION, duration)
-            put(COLUMN_ROUNDS, rounds)
-        }
-        Log.d("MainDatabase", "MainDatabase inserted weekNumber as: $weekNumber")
-        Log.d("MainDatabase", "MainDatabase inserted weekMonday as: $weekMonday")
-        writableDatabase.insert(TABLE_TASK_DETAILS, null, values)
     }
 }
