@@ -187,7 +187,7 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         val tasks = mutableListOf<TaskInfo>()
         val db = readableDatabase
 
-        val query = "SELECT * FROM ${MainDatabase.TABLE_TASK_DETAILS} WHERE ${MainDatabase.COLUMN_DATE} >= ?"
+        val query = "SELECT * FROM ${MainDatabase.TABLE_TASK_7DAYS} WHERE ${MainDatabase.COLUMN_DATE} >= ?"
 
         try {
             val cursor = db.rawQuery(query, arrayOf(fromDate))

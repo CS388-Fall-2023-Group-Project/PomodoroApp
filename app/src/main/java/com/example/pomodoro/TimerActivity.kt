@@ -92,6 +92,7 @@ class TimerActivity : AppCompatActivity() {
             finish()
 
         }
+
     }
 
     private fun insertDataIntoDatabase(weekNumber: Int, weekMonday: String, currentTimeEnd: String) {

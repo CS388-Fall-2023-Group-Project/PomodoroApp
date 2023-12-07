@@ -18,6 +18,7 @@ import java.util.Calendar
 import java.util.Date
 
 class AnalyticsFragment : Fragment() {
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -29,6 +30,16 @@ class AnalyticsFragment : Fragment() {
     // this is a comment to teach about git
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        lateinit var dbHelper: MainDatabase
+
+       val  day7info = dbHelper.getTasksForLast7Days("2023-12-7")
+        for (task in day7info)
+        {
+            val taskID = task.id
+            val duration = task.duration
+
+
+        }
 
         setupHorizontalChart(view)
         setupBarChart(view)
