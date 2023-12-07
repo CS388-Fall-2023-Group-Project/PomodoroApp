@@ -27,6 +27,7 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var exitButton: Button
     private lateinit var roundCounter: TextView
 
+    private var roundNumber =1
     private val mainDatabase: MainDatabase by lazy {
         MainDatabase(this)
     }
