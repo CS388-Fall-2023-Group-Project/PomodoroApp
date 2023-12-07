@@ -25,6 +25,7 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var timerText: TextView
     private lateinit var countdownTimer: CountdownTimerHelper
     private lateinit var exitButton: Button
+    private lateinit var roundCounter: TextView
 
     private val mainDatabase: MainDatabase by lazy {
         MainDatabase(this)
@@ -37,6 +38,7 @@ class TimerActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressbar)
         timerText = findViewById(R.id.timerTexts)
         exitButton = findViewById(R.id.exitStudy)
+        roundCounter = findViewById(R.id.roundCounterTV)
 
         val selectedStudyOn = intent.getStringExtra("selectedStudyOn")
         val studyOnMinutes = selectedStudyOn?.let { extractNumberFromString(it) } ?: 0
