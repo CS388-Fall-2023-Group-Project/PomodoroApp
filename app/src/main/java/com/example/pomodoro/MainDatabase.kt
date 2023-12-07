@@ -1,3 +1,4 @@
+// MainDatabase
 package com.example.pomodoro
 
 import android.annotation.SuppressLint
@@ -89,7 +90,7 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_TASK_DETAILS")
         onCreate(db)
     }
-        @SuppressLint("Range")
+    @SuppressLint("Range")
     fun getTasksForDate(date: String): List<TaskInfo> {
         val tasks = mutableListOf<TaskInfo>()
         val db = readableDatabase
