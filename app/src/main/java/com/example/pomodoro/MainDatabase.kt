@@ -83,11 +83,13 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         )
     }
 
+
+
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_TASK_DETAILS")
         onCreate(db)
     }
-    @SuppressLint("Range")
+        @SuppressLint("Range")
     fun getTasksForDate(date: String): List<TaskInfo> {
         val tasks = mutableListOf<TaskInfo>()
         val db = readableDatabase
@@ -117,6 +119,37 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
 
         return tasks
     }
+    @SuppressLint("Range")
+    fun getTasksForWeek(weekNumber: Int): List<TaskInfo> {
+        val tasks = mutableListOf<TaskInfo>()
+        val db = readableDatabase
+
+        val query = "SELECT * FROM ${MainDatabase.TABLE_TASK_DETAILS} WHERE ${MainDatabase.COLUMN_WEEK_NUMBER} = ?"
+
+        try {
+            val cursor = db.rawQuery(query, arrayOf(weekNumber.toString()))
+
+            cursor.use {
+                while (it.moveToNext()) {
+                    val taskID = it.getInt(it.getColumnIndex(MainDatabase.COLUMN_ID))
+                    val taskName = it.getString(it.getColumnIndex(MainDatabase.COLUMN_TASK_NAME))
+                    val taskCategory = it.getString(it.getColumnIndex(MainDatabase.COLUMN_SUBJECT))
+                    val timeRange = it.getString(it.getColumnIndex(MainDatabase.COLUMN_TIME_RANGE))
+                    val duration = it.getInt(it.getColumnIndex(MainDatabase.COLUMN_DURATION))
+
+                    val task = TaskInfo(taskID, taskName, taskCategory, timeRange, duration)
+                    tasks.add(task)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("MainDatabase", "Error fetching tasks for week number: $weekNumber", e)
+        } finally {
+            db.close()
+        }
+
+        return tasks
+    }
+
     fun insertStudySession(
         weekNumber: Int,
         weekMonday: String,
