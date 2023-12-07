@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModelProvider
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -36,18 +37,8 @@ class TimerActivity : AppCompatActivity() {
         timerText = findViewById(R.id.timerTexts)
         exitButton = findViewById(R.id.exitStudy)
 
-        val currentDate = intent.getStringExtra("currentDate")
-        val studyGoal = intent.getStringExtra("studyGoal")
-        val selectedSubject = intent.getStringExtra("selectedSubject")
         val selectedStudyOn = intent.getStringExtra("selectedStudyOn")
-        val selectedStudyOff = intent.getStringExtra("selectedStudyOff")
-        val currentTimeStart = intent.getStringExtra("currentTimeStart")
-        val selectedRounds = intent.getStringExtra("selectedRounds")
-
-        Log.e("MainDatabase", "data received: $currentDate")
-
         val studyOnMinutes = selectedStudyOn?.let { extractNumberFromString(it) } ?: 0
-
         val restartTimer = intent.getBooleanExtra("restartTimer", false)
 
         // If the flag is true, restart the timer
@@ -79,20 +70,30 @@ class TimerActivity : AppCompatActivity() {
         // Start the countdown timer
         countdownTimer.start()
 
-
         exitButton.setOnClickListener {
+            // Current Time End: Get the time when user end the session
             val currentTimeEnd = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
 
-            insertDataIntoDatabase(currentTimeEnd)
-            Log.e("MainDatabase", "Exit Button at $currentTimeEnd")
+            // Week Number
+            val calendar = Calendar.getInstance()
+            val weekNumber = calendar.get(Calendar.WEEK_OF_YEAR)
 
+            // Week Monday: Get the date of the Monday for the current week
+            calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val weekMonday = simpleDateFormat.format(calendar.time)
+
+            insertDataIntoDatabase(weekNumber, weekMonday, currentTimeEnd)
+            Log.d("MainDatabase", "Exit Button | Current time of exit: $currentTimeEnd")
+            Log.d("MainDatabase", "Exit Button | Monday date: $weekNumber")
+            Log.d("MainDatabase", "Exit Button | Monday date: $weekMonday")
             // Navigate back to the home fragment or activity
             finish()
 
         }
     }
 
-    private fun insertDataIntoDatabase(currentTimeEnd: String) {
+    private fun insertDataIntoDatabase(weekNumber: Int, weekMonday: String, currentTimeEnd: String) {
         // OLD DATA FROM SetStudyGoals -----------------------------
         val currentDate = intent.getStringExtra("currentDate")?: ""
         val studyGoal = intent.getStringExtra("studyGoal")?: ""
@@ -102,22 +103,28 @@ class TimerActivity : AppCompatActivity() {
         val currentTimeStart = intent.getStringExtra("currentTimeStart")?: ""
         val selectedRounds = intent.getStringExtra("selectedRounds")?: ""
         // NEW DATA ------------------------------------------------
-        // Duration: Convert the duration from milliseconds to hours
+        // 1) Week Number
+        // 2) Week Monday Date
+        // 3) Duration: Convert the duration from milliseconds to hours as follows
         val startMillis = SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(currentTimeStart)?.time ?: 0
         val endMillis = SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(currentTimeEnd)?.time ?: 0
         val durationInMillis = endMillis - startMillis
         val durationInHours = TimeUnit.MILLISECONDS.toHours(durationInMillis).toInt()
-        // Time Range: Fill in Time Range based on collected times
+        // 4) Time Range: Fill in Time Range based on collected times as follows
         val timeRange = "$currentTimeStart - $currentTimeEnd"
-        // INSERT TO MAINDATABASE ----------------------------------
+        // 5)
+
+        // INSERT TO MAIN DATABASE ----------------------------------
         mainDatabase.insertStudySession(
+            weekNumber,
+            weekMonday,
             currentDate,
             studyGoal,
             selectedSubject,
             selectedStudyOn,
             selectedStudyOff,
             currentTimeStart,
-            currentTimeEnd = currentTimeEnd,
+            currentTimeEnd,
             timeRange,
             duration = durationInHours,
             selectedRounds
