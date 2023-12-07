@@ -1,4 +1,3 @@
-// MainDatabase
 package com.example.pomodoro
 
 import android.annotation.SuppressLint
