@@ -1,0 +1,22 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+
+
+    <com.github.jinatonic.confetti.ConfettiView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/confetti"
+        android:layout_centerInParent="true"/>
+    <TextView
+        android:id="@+id/congratsMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Congrats! You completed an entire study session"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_centerInParent="true"/>
+
+    </RelativeLayout>

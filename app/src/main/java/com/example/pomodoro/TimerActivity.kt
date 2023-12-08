@@ -22,7 +22,6 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var countdownTimer: CountdownTimerHelper
     private lateinit var exitButton: Button
     private lateinit var roundCounter: TextView
-
     private var roundNumber =1
 
 
@@ -39,7 +38,6 @@ class TimerActivity : AppCompatActivity() {
         timerText = findViewById(R.id.studyOnTimerTV)
         exitButton = findViewById(R.id.exitStudy)
         roundCounter = findViewById(R.id.roundCounterTV)
-
 
 
         val selectedStudyOn = intent.getStringExtra("selectedStudyOn")
@@ -92,7 +90,9 @@ class TimerActivity : AppCompatActivity() {
 
         if (roundNumber > intentSelectedRounds) {
             roundNumber--;
-            finish()
+            val congratsIntent = Intent(this@TimerActivity, CongratsActivity::class.java)
+            startActivity(congratsIntent)
+
 
         }
 
