@@ -9,6 +9,7 @@ import android.net.Uri
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
@@ -26,6 +27,9 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import android.app.Dialog
+import android.graphics.Color
+
 
 class TimerActivity : AppCompatActivity() {
 
@@ -34,6 +38,7 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var countdownTimer: CountdownTimerHelper
     private lateinit var exitButton: Button
     private lateinit var roundCounter: TextView
+    private lateinit var welcomeBackDialog: Dialog
 
     private var roundNumber =1
 
@@ -135,6 +140,15 @@ class TimerActivity : AppCompatActivity() {
 
         }
 
+        // Initialize the welcome back dialog
+        welcomeBackDialog = Dialog(this)
+        welcomeBackDialog.setContentView(R.layout.welcome_back_dialog)
+        welcomeBackDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val okButton: Button = welcomeBackDialog.findViewById(R.id.okButton)
+        okButton.setOnClickListener {
+            welcomeBackDialog.dismiss()
+        }
+
 
 
 
@@ -208,7 +222,6 @@ class TimerActivity : AppCompatActivity() {
         // to be called if user swipes out at any moment
         countdownTimer.cancel()
         countdownTimer.start()
-
     }
 
     private fun extractNumberFromString(timeString: String): Long {
@@ -265,6 +278,7 @@ class TimerActivity : AppCompatActivity() {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(NOTIFICATION_ID, builder.build())
+        welcomeBackDialog.show()
     }
 
 
