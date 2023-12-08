@@ -17,7 +17,6 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -57,7 +56,7 @@ class TimerActivity : AppCompatActivity() {
         createNotificationChannel()
 
         progressBar = findViewById(R.id.progressbar)
-        timerText = findViewById(R.id.timerTexts)
+        timerText = findViewById(R.id.studyOnTimerTV)
         exitButton = findViewById(R.id.exitStudy)
         roundCounter = findViewById(R.id.roundCounterTV)
 
@@ -66,6 +65,7 @@ class TimerActivity : AppCompatActivity() {
         val selectedStudyOn = intent.getStringExtra("selectedStudyOn")
         val intentSelectedRoundsString = intent.getStringExtra("selectedRounds")
 
+        val selectedStudyOff = intent.getStringExtra("selectedStudyOff")
 
         val studyOnMinutes = selectedStudyOn?.let { extractNumberFromString(it) } ?: 0
         val restartTimer = intent.getBooleanExtra("restartTimer", false)
@@ -80,7 +80,6 @@ class TimerActivity : AppCompatActivity() {
 
         updateRoundCounterText()
 
-
         // If the flag is true, restart the timer
         if (restartTimer) {
             restartTimer()
@@ -91,22 +90,21 @@ class TimerActivity : AppCompatActivity() {
         val interval = 1000L // 1 second
 
         countdownTimer = CountdownTimerHelper(
-            totalTimeInMillis = totalTimeInMillis,
-            interval = interval,
-            onTick = { millisUntilFinished ->
-                val progress = (millisUntilFinished.toFloat() / totalTimeInMillis * 100).toInt()
-                progressBar.progress = progress
+                totalTimeInMillis = totalTimeInMillis,
+                interval = interval,
+                onTick = { millisUntilFinished ->
+                    val progress = (millisUntilFinished.toFloat() / totalTimeInMillis * 100).toInt()
+                    progressBar.progress = progress
 
-                // Update the timer text
-                val formattedTime = formatTime(millisUntilFinished)
-                timerText.text = formattedTime
-            },
-            onFinish = {
-                // Timer finished, handle it as needed
-                val intent= Intent(this@TimerActivity,BreakActivity::class.java)
-                startActivity(intent)
-                roundNumber++
-            }
+                    // Update the timer text
+                    val formattedTime = formatTime(millisUntilFinished)
+                    timerText.text = formattedTime
+                },
+                onFinish = {
+                    // Timer finished, handle it as needed
+                    val intent= Intent(this@TimerActivity,BreakActivity::class.java)
+                    startActivity(intent)
+                }
         )
 
         if (roundNumber > intentSelectedRounds) {
@@ -130,11 +128,7 @@ class TimerActivity : AppCompatActivity() {
             calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
             val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val weekMonday = simpleDateFormat.format(calendar.time)
-
-            insertDataIntoDatabase(weekNumber, weekMonday, currentTimeEnd)
-            Log.d("MainDatabase", "Exit Button | Current time of exit: $currentTimeEnd")
-            Log.d("MainDatabase", "Exit Button | Monday date: $weekNumber")
-            Log.d("MainDatabase", "Exit Button | Monday date: $weekMonday")
+            insertDataIntoDatabase(weekNumber, weekMonday, currentTimeEnd, roundNumber)
             // Navigate back to the home fragment or activity
             finish()
 
@@ -164,7 +158,7 @@ class TimerActivity : AppCompatActivity() {
         // Save the current round number to restore it later
         outState.putInt("roundNumber", roundNumber)
     }
-    private fun insertDataIntoDatabase(weekNumber: Int, weekMonday: String, currentTimeEnd: String) {
+    private fun insertDataIntoDatabase(weekNumber: Int, weekMonday: String, currentTimeEnd: String, roundNumber: Int) {
         // OLD DATA FROM SetStudyGoals -----------------------------
         val currentDate = intent.getStringExtra("currentDate")?: ""
         val studyGoal = intent.getStringExtra("studyGoal")?: ""
@@ -183,25 +177,32 @@ class TimerActivity : AppCompatActivity() {
         val durationInHours = TimeUnit.MILLISECONDS.toHours(durationInMillis).toInt()
         // 4) Time Range: Fill in Time Range based on collected times as follows
         val timeRange = "$currentTimeStart - $currentTimeEnd"
+        // 5) Round Number
 
         // INSERT TO MAIN DATABASE ----------------------------------
-        mainDatabase.insertStudySession(
-            weekNumber,
-            weekMonday,
-            currentDate,
-            studyGoal,
-            selectedSubject,
-            selectedStudyOn,
-            selectedStudyOff,
-            currentTimeStart,
-            currentTimeEnd,
-            timeRange,
-            duration = durationInHours,
-            selectedRounds
+        mainDatabase.insertTableTaskDetails(
+                weekNumber,
+                weekMonday,
+                currentDate,
+                studyGoal,
+                selectedSubject,
+                selectedStudyOn,
+                selectedStudyOff,
+                currentTimeStart,
+                currentTimeEnd,
+                timeRange,
+                duration = durationInHours,
+                roundNumber
         )
-        Log.d("MainDatabase", "TimerActivity inserted data of $currentDate to TABLE_TASKDETAILS")
+        Log.d("MainDatabase", "TimerActivity inserted data of $currentDate to TABLE_TASK_DETAILS")
         // DELETE OUTDATED DATE
-        mainDatabase.deleteOutdatedTasks(sevenDaysFromDate = currentDate)
+        // mainDatabase.deleteOutdatedTasks(fromDate = currentDate)
+        // mainDatabase.getTasksForLast7Days(fromDate = currentDate)
+        // mainDatabase.getTotalDurationByCategoryLast7Days(fromDate = currentDate)
+        val taskInfo7 = mainDatabase.getTasksForDate(currentDate)
+        Log.d("MainDatabase", "TimerActivity getTasksForLast7Days() TASK INFO7: $taskInfo7")
+        val taskDuration7 = mainDatabase.getTotalDurationByCategoryLast7Days(currentDate)
+        Log.d("MainDatabase", "TimerActivity getTotalDurationByCategoryLast7Days: $taskDuration7")
     }
 
     override fun onDestroy() {
