@@ -51,21 +51,21 @@ class TimerActivity : AppCompatActivity() {
         val interval = 1000L // 1 second
 
         countdownTimer = CountdownTimerHelper(
-            totalTimeInMillis = totalTimeInMillis,
-            interval = interval,
-            onTick = { millisUntilFinished ->
-                val progress = (millisUntilFinished.toFloat() / totalTimeInMillis * 100).toInt()
-                progressBar.progress = progress
+                totalTimeInMillis = totalTimeInMillis,
+                interval = interval,
+                onTick = { millisUntilFinished ->
+                    val progress = (millisUntilFinished.toFloat() / totalTimeInMillis * 100).toInt()
+                    progressBar.progress = progress
 
-                // Update the timer text
-                val formattedTime = formatTime(millisUntilFinished)
-                timerText.text = formattedTime
-            },
-            onFinish = {
-                // Timer finished, handle it as needed
-                val intent= Intent(this@TimerActivity,BreakActivity::class.java)
-                startActivity(intent)
-            }
+                    // Update the timer text
+                    val formattedTime = formatTime(millisUntilFinished)
+                    timerText.text = formattedTime
+                },
+                onFinish = {
+                    // Timer finished, handle it as needed
+                    val intent= Intent(this@TimerActivity,BreakActivity::class.java)
+                    startActivity(intent)
+                }
         )
 
         // Start the countdown timer
@@ -85,9 +85,6 @@ class TimerActivity : AppCompatActivity() {
             val weekMonday = simpleDateFormat.format(calendar.time)
 
             insertDataIntoDatabase(weekNumber, weekMonday, currentTimeEnd)
-            Log.d("MainDatabase", "Exit Button | Current time of exit: $currentTimeEnd")
-            Log.d("MainDatabase", "Exit Button | Monday date: $weekNumber")
-            Log.d("MainDatabase", "Exit Button | Monday date: $weekMonday")
             // Navigate back to the home fragment or activity
             finish()
 
@@ -115,23 +112,29 @@ class TimerActivity : AppCompatActivity() {
         val timeRange = "$currentTimeStart - $currentTimeEnd"
 
         // INSERT TO MAIN DATABASE ----------------------------------
-        mainDatabase.insertStudySession(
-            weekNumber,
-            weekMonday,
-            currentDate,
-            studyGoal,
-            selectedSubject,
-            selectedStudyOn,
-            selectedStudyOff,
-            currentTimeStart,
-            currentTimeEnd,
-            timeRange,
-            duration = durationInHours,
-            selectedRounds
+        mainDatabase.insertTableTaskDetails(
+                weekNumber,
+                weekMonday,
+                currentDate,
+                studyGoal,
+                selectedSubject,
+                selectedStudyOn,
+                selectedStudyOff,
+                currentTimeStart,
+                currentTimeEnd,
+                timeRange,
+                duration = durationInHours,
+                selectedRounds
         )
-        Log.d("MainDatabase", "TimerActivity inserted data of $currentDate to TABLE_TASKDETAILS")
+        Log.d("MainDatabase", "TimerActivity inserted data of $currentDate to TABLE_TASK_DETAILS")
         // DELETE OUTDATED DATE
-        mainDatabase.deleteOutdatedTasks(sevenDaysFromDate = currentDate)
+        // mainDatabase.deleteOutdatedTasks(fromDate = currentDate)
+        // mainDatabase.getTasksForLast7Days(fromDate = currentDate)
+        // mainDatabase.getTotalDurationByCategoryLast7Days(fromDate = currentDate)
+        val taskInfo7 = mainDatabase.getTasksForDate(currentDate)
+        Log.d("MainDatabase", "TimerActivity getTasksForLast7Days() TASK INFO7: $taskInfo7")
+        val taskDuration7 = mainDatabase.getTotalDurationByCategoryLast7Days(currentDate)
+        Log.d("MainDatabase", "TimerActivity getTotalDurationByCategoryLast7Days: $taskDuration7")
     }
 
     override fun onDestroy() {
