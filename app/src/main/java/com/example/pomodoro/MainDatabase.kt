@@ -44,7 +44,7 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
                 $COLUMN_CURRENT_TIME_END STRING,
                 $COLUMN_TIME_RANGE STRING,
                 $COLUMN_DURATION INT,
-                $COLUMN_ROUNDS STRING
+                $COLUMN_ROUNDS INT
             )
         """.trimIndent()
 
@@ -87,7 +87,7 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
             currentTimeEnd: String,
             timeRange: String,
             duration: Int,
-            rounds: String,
+            rounds: Int,
     ) {
         val values = ContentValues().apply {
             put(COLUMN_DATE, date)
@@ -114,7 +114,7 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
             currentTimeEnd: String,
             timeRange: String,
             duration: Int,
-            rounds: String,
+            rounds: Int,
     ) {
         val values = ContentValues().apply {
             put(COLUMN_DATE, date)

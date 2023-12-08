@@ -23,9 +23,7 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var exitButton: Button
     private lateinit var roundCounter: TextView
 
-    private var roundNumber =1
-
-
+    private var roundNumber = 1
 
     private val mainDatabase: MainDatabase by lazy {
         MainDatabase(this)
@@ -59,7 +57,6 @@ class TimerActivity : AppCompatActivity() {
         }
 
         updateRoundCounterText()
-
 
         // If the flag is true, restart the timer
         if (restartTimer) {
@@ -109,8 +106,7 @@ class TimerActivity : AppCompatActivity() {
             calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
             val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val weekMonday = simpleDateFormat.format(calendar.time)
-
-            insertDataIntoDatabase(weekNumber, weekMonday, currentTimeEnd)
+            insertDataIntoDatabase(weekNumber, weekMonday, currentTimeEnd, roundNumber)
             // Navigate back to the home fragment or activity
             finish()
 
@@ -131,7 +127,7 @@ class TimerActivity : AppCompatActivity() {
         // Save the current round number to restore it later
         outState.putInt("roundNumber", roundNumber)
     }
-    private fun insertDataIntoDatabase(weekNumber: Int, weekMonday: String, currentTimeEnd: String) {
+    private fun insertDataIntoDatabase(weekNumber: Int, weekMonday: String, currentTimeEnd: String, roundNumber: Int) {
         // OLD DATA FROM SetStudyGoals -----------------------------
         val currentDate = intent.getStringExtra("currentDate")?: ""
         val studyGoal = intent.getStringExtra("studyGoal")?: ""
@@ -150,6 +146,7 @@ class TimerActivity : AppCompatActivity() {
         val durationInHours = TimeUnit.MILLISECONDS.toHours(durationInMillis).toInt()
         // 4) Time Range: Fill in Time Range based on collected times as follows
         val timeRange = "$currentTimeStart - $currentTimeEnd"
+        // 5) Round Number
 
         // INSERT TO MAIN DATABASE ----------------------------------
         mainDatabase.insertTableTaskDetails(
@@ -164,7 +161,7 @@ class TimerActivity : AppCompatActivity() {
                 currentTimeEnd,
                 timeRange,
                 duration = durationInHours,
-                selectedRounds
+                roundNumber
         )
         Log.d("MainDatabase", "TimerActivity inserted data of $currentDate to TABLE_TASK_DETAILS")
         // DELETE OUTDATED DATE
