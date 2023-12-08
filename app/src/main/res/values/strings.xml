@@ -11,6 +11,7 @@
 
     <!-- Study durations -->
     <string-array name="study_on_array">
+
         <item> 1 minutes</item>
         <item>15 minutes</item>
         <item>20 minutes</item>
@@ -49,14 +50,17 @@
     </string-array>
 
     <string-array name="rounds_array">
-        <item>2 rounds</item>
-        <item>3 rounds</item>
-        <item>4 rounds</item>
-        <item>5 rounds</item>
-        <item>6 rounds</item>
-        <item>7 rounds</item>
-        <item>8 rounds</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
     </string-array>
 
     <string name="finish_message">With this ratio, you are set to finish at %1$s</string>
+    <string name="round_counter">Round: %1$d</string>
+
 </resources>
