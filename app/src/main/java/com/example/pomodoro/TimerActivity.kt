@@ -2,18 +2,33 @@
 package com.example.pomodoro
 
 
+import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.net.Uri
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
+import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.lifecycle.ViewModelProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import android.app.Dialog
+import android.graphics.Color
+
 
 class TimerActivity : AppCompatActivity() {
 
@@ -22,8 +37,14 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var countdownTimer: CountdownTimerHelper
     private lateinit var exitButton: Button
     private lateinit var roundCounter: TextView
+    private lateinit var welcomeBackDialog: Dialog
 
-    private var roundNumber = 1
+    private var roundNumber =1
+
+    // making a a unique notif based on what time it is
+    private val NOTIFICATION_ID = System.currentTimeMillis().toInt()
+    private val CHANNEL_ID = "timer_channel"
+
 
     private val mainDatabase: MainDatabase by lazy {
         MainDatabase(this)
@@ -32,6 +53,7 @@ class TimerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.study_timer)
+        createNotificationChannel()
 
         progressBar = findViewById(R.id.progressbar)
         timerText = findViewById(R.id.studyOnTimerTV)
@@ -91,7 +113,7 @@ class TimerActivity : AppCompatActivity() {
 
         }
 
-            // Start the countdown timer
+        // Start the countdown timer
         countdownTimer.start()
 
         exitButton.setOnClickListener {
@@ -110,6 +132,15 @@ class TimerActivity : AppCompatActivity() {
             // Navigate back to the home fragment or activity
             finish()
 
+        }
+
+        // Initialize the welcome back dialog
+        welcomeBackDialog = Dialog(this)
+        welcomeBackDialog.setContentView(R.layout.welcome_back_dialog)
+        welcomeBackDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val okButton: Button = welcomeBackDialog.findViewById(R.id.okButton)
+        okButton.setOnClickListener {
+            welcomeBackDialog.dismiss()
         }
 
 
@@ -189,13 +220,9 @@ class TimerActivity : AppCompatActivity() {
     }
 
     private fun restartTimer() {
-        // Your logic to restart the timer goes here
-        // For example, create a new instance of CountdownTimerHelper and start it
+        // to be called if user swipes out at any moment
         countdownTimer.cancel()
-
-        // Start a new timer
         countdownTimer.start()
-
     }
 
     private fun extractNumberFromString(timeString: String): Long {
@@ -209,6 +236,65 @@ class TimerActivity : AppCompatActivity() {
             "minutes" -> value * 60 * 1000L
             "hours" -> value * 60 * 60 * 1000L
             else -> throw IllegalArgumentException("Unsupported time unit: $unit")
+        }
+    }
+
+
+    /* ==============================================================================
+    *
+    *   NOTIFICATION LOGIC
+    *
+    ================================================================================= */
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        // User swiped out of the app, show notification
+        showSwipeAwayNotification()
+        restartTimer()
+    }
+
+    private fun showSwipeAwayNotification() {
+        val notificationIntent = Intent(this, TimerActivity::class.java)
+        val contentIntent = PendingIntent.getActivity(
+            this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val soundUri = Uri.parse("android.resource://${packageName}/${R.raw.womp_womp}")
+
+        // Create a notification builder
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.pomodoro_logo)
+            .setContentTitle("Pomodoro Timer")
+            .setContentText("Your timer was reset to 0. Get back to work!")
+            .setPriority(NotificationCompat.PRIORITY_HIGH) // Set priority to heads-up
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setContentIntent(contentIntent)
+            .setFullScreenIntent(contentIntent, true) // Set full screen intent
+            .setAutoCancel(true)
+            .setSound(soundUri)
+
+        // Optionally, add a custom sound
+        builder.setSound(Uri.parse("android.resource://${packageName}/${R.raw.womp_womp}"))
+
+        // Show the notification
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(NOTIFICATION_ID, builder.build())
+        welcomeBackDialog.show()
+    }
+
+
+    private fun createNotificationChannel() {
+        // Create a notification channel for Android Oreo and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "Timer Notifications",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channel.description = "Notifications for timer events"
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
         }
     }
 
