@@ -233,7 +233,7 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
             cursor.use {
                 while (it.moveToNext()) {
                     val category = it.getString(it.getColumnIndex(MainDatabase.COLUMN_SUBJECT))
-                    val totalDuration = it.getInt(it.getColumnIndex("total_duration"))
+                    val totalDuration = it.getInt(it.getColumnIndex(COLUMN_TOTAL_DURATION))
                     totalDurations[category] = totalDuration
                 }
             }
