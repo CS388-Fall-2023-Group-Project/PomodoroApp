@@ -58,4 +58,5 @@
         <item>8 rounds</item>
     </string-array>
 
+    <string name="finish_message">With this ratio, you are set to finish at %1$s</string>
 </resources>
