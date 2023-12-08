@@ -1,6 +1,5 @@
 package com.example.pomodoro
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.util.Random
 
-class Adapter_HistoryRecyclerView : RecyclerView.Adapter<Adapter_HistoryRecyclerView.ViewHolder>() {
+class HistoryRVAdapter : RecyclerView.Adapter<HistoryRVAdapter.ViewHolder>() {
     private var taskList: ArrayList<TaskInfo> = ArrayList()
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskName = itemView.findViewById<TextView>(R.id.taskTextView)
-        val subject = itemView.findViewById<TextView>(R.id.categoryTextView)
+        val taskCat = itemView.findViewById<TextView>(R.id.categoryTextView)
         val duration = itemView.findViewById<TextView>(R.id.durationTextView)
         val timeRange = itemView.findViewById<TextView>(R.id.timeRangeTextView)
     }
@@ -26,7 +25,7 @@ class Adapter_HistoryRecyclerView : RecyclerView.Adapter<Adapter_HistoryRecycler
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val tracker = taskList[position]
         holder.taskName.text = tracker.task
-        holder.subject.text = tracker.subject
+        holder.taskCat.text = tracker.category
         holder.timeRange.text = tracker.timerange
         tracker.duration?.let {
             holder.duration.text = "$it hours"
@@ -49,7 +48,7 @@ class Adapter_HistoryRecyclerView : RecyclerView.Adapter<Adapter_HistoryRecycler
 data class TaskInfo (
     var id: Int = 1,
     var task: String = "",
-    var subject: String = "",
+    var category: String = "",
     var timerange: String = "",
     var duration: Int? = null
 ){
@@ -60,3 +59,4 @@ data class TaskInfo (
         }
     }
 }
+
