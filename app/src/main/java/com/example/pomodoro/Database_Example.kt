@@ -12,7 +12,7 @@ class Database_Example (context: Context): SQLiteOpenHelper(context, DATABASE_NA
         private const val DATABASE_VERSION = 1
         private const val DATABASE_NAME = "database.db"
 
-        private const val TABLE_HISTORY = "tbl_history"
+        const val TABLE_HISTORY = "tbl_history"
         private const val COLUMN_ID = "id"
         private const val COLUMN_DATE = "date"
         private const val COLUMN_TASK_NAME = "taskName"
