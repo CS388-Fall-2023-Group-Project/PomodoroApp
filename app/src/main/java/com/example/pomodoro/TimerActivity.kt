@@ -2,17 +2,13 @@
 package com.example.pomodoro
 
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.lifecycle.ViewModelProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -25,6 +21,11 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var timerText: TextView
     private lateinit var countdownTimer: CountdownTimerHelper
     private lateinit var exitButton: Button
+    private lateinit var roundCounter: TextView
+
+    private var roundNumber =1
+
+
 
     private val mainDatabase: MainDatabase by lazy {
         MainDatabase(this)
@@ -35,17 +36,36 @@ class TimerActivity : AppCompatActivity() {
         setContentView(R.layout.study_timer)
 
         progressBar = findViewById(R.id.progressbar)
-        timerText = findViewById(R.id.timerTexts)
+        timerText = findViewById(R.id.studyOnTimerTV)
         exitButton = findViewById(R.id.exitStudy)
+        roundCounter = findViewById(R.id.roundCounterTV)
+
+
 
         val selectedStudyOn = intent.getStringExtra("selectedStudyOn")
+        val intentSelectedRoundsString = intent.getStringExtra("selectedRounds")
+
+        val selectedStudyOff = intent.getStringExtra("selectedStudyOff")
+
         val studyOnMinutes = selectedStudyOn?.let { extractNumberFromString(it) } ?: 0
         val restartTimer = intent.getBooleanExtra("restartTimer", false)
+
+        val intentSelectedRounds = intentSelectedRoundsString?.toIntOrNull() ?: 0
+
+
+        if (savedInstanceState != null) {
+            roundNumber = savedInstanceState.getInt("roundNumber", 1)
+
+        }
+
+        updateRoundCounterText()
+
 
         // If the flag is true, restart the timer
         if (restartTimer) {
             restartTimer()
         }
+
 
         val totalTimeInMillis = studyOnMinutes.toLong() // 1 minute
         val interval = 1000L // 1 second
@@ -68,7 +88,13 @@ class TimerActivity : AppCompatActivity() {
                 }
         )
 
-        // Start the countdown timer
+        if (roundNumber > intentSelectedRounds) {
+            roundNumber--;
+            finish()
+
+        }
+
+            // Start the countdown timer
         countdownTimer.start()
 
         exitButton.setOnClickListener {
@@ -89,8 +115,22 @@ class TimerActivity : AppCompatActivity() {
             finish()
 
         }
+
+
+
+
     }
 
+
+    private fun updateRoundCounterText() {
+        roundCounter.text = getString(R.string.round_counter, roundNumber)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // Save the current round number to restore it later
+        outState.putInt("roundNumber", roundNumber)
+    }
     private fun insertDataIntoDatabase(weekNumber: Int, weekMonday: String, currentTimeEnd: String) {
         // OLD DATA FROM SetStudyGoals -----------------------------
         val currentDate = intent.getStringExtra("currentDate")?: ""
