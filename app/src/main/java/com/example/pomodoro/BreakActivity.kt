@@ -10,31 +10,13 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import java.util.concurrent.TimeUnit
 
 class BreakActivity: AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var timerText: TextView
     private lateinit var countdownTimer: CountdownTimerHelper
     private lateinit var exitButton: Button
-   /* override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.challenege_list)
-
-
-        progressBar = findViewById(R.id.studyoffTimer)
-        timerText = findViewById(R.id.timerTextView)
-        exitButton = findViewById(R.id)
-
-
-
-        exitButton.setOnClickListener {
-            // Navigate back to the home fragment or activity
-            val intent= Intent(this@BreakActivity,TimerActivity::class.java)
-            intent.putExtra("restartTimer", true)
-            startActivity(intent)
-
-        }
-    } */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +24,21 @@ class BreakActivity: AppCompatActivity() {
         setContentView(R.layout.yoga_list)
 
 
-        val webView: WebView = findViewById(R.id.webView)
+
+        progressBar = findViewById(R.id.progressBar2)
+        timerText = findViewById(R.id.studyOffTimerTV)
         exitButton = findViewById(R.id.return_btn2)
 
+
+        val restartTimer = intent.getBooleanExtra("restartTimer", false)
+
+        val selectedStudyOff = intent.getStringExtra("selectedStudyOff")
+
+        val studyOffMinutes = selectedStudyOff?.let { extractNumberFromString(it) } ?: 0
+
+
+        val webView: WebView = findViewById(R.id.webView)
+        exitButton = findViewById(R.id.return_btn2)
         // Enable JavaScript in the WebView
         webView.settings.javaScriptEnabled = true
 
@@ -65,8 +59,41 @@ class BreakActivity: AppCompatActivity() {
             // Handle UI events here if needed
         }
 
+        if (restartTimer) {
+            restartTimer2()
+        }
+
+        val totalTimeInMillis = studyOffMinutes.toLong() // 1 minute
+        val interval = 1000L // 1 second
+
+
+
+        countdownTimer = CountdownTimerHelper(
+            totalTimeInMillis = totalTimeInMillis,
+            interval = interval,
+            onTick = { millisUntilFinished ->
+                val progress = (millisUntilFinished.toFloat() / totalTimeInMillis * 100).toInt()
+                progressBar.progress = progress
+
+                // Update the timer text
+                val formattedTime = formatTime(millisUntilFinished)
+                timerText.text = formattedTime
+            },
+            onFinish = {
+                // Timer finished, handle it as needed
+                // For example, navigate back to the previous activity
+                val returnStudy= Intent(this@BreakActivity,TimerActivity::class.java)
+                returnStudy.putExtra("restartTimer", true)
+                startActivity(returnStudy)
+            }
+        )
+
+        countdownTimer.start()
+
         exitButton.setOnClickListener {
             // Navigate back to the home fragment or activity
+
+            countdownTimer.cancel()
             val returnStudy= Intent(this@BreakActivity,TimerActivity::class.java)
             returnStudy.putExtra("restartTimer", true)
             startActivity(returnStudy)
@@ -75,5 +102,41 @@ class BreakActivity: AppCompatActivity() {
     }
 
 
+    private fun formatTime(millis: Long): String {
+        val hours = TimeUnit.MILLISECONDS.toHours(millis)
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(millis) % 60
+        val seconds = TimeUnit.MILLISECONDS.toSeconds(millis) % 60
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        // Cancel the timer to avoid memory leaks
+        countdownTimer.cancel()
+    }
+    private fun restartTimer2() {
+        // Your logic to restart the timer goes here
+        // For example, create a new instance of CountdownTimerHelper and start it
+        countdownTimer.cancel()
+
+        // Start a new timer
+        countdownTimer.start()
+
+    }
+
+
+    private fun extractNumberFromString(timeString: String): Long {
+        val regex = """(\d+) (\w+)""".toRegex()
+        val matchResult = regex.find(timeString)
+        val value = matchResult?.groupValues?.get(1)?.toIntOrNull() ?: 0
+        val unit = matchResult?.groupValues?.get(2)?.toLowerCase() ?: "minutes"
+
+        return when (unit) {
+            "seconds" -> value * 1000L
+            "minutes" -> value * 60 * 1000L
+            "hours" -> value * 60 * 60 * 1000L
+            else -> throw IllegalArgumentException("Unsupported time unit: $unit")
+        }
+    }
 
 }

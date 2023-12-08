@@ -21,7 +21,7 @@
         android:progressDrawable="@drawable/circular_progress_bar" />
 
     <TextView
-        android:id="@+id/timerTexts"
+        android:id="@+id/studyOnTimerTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="00:00"
