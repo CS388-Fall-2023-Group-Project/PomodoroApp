@@ -2,17 +2,13 @@
 package com.example.pomodoro
 
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.lifecycle.ViewModelProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -40,7 +36,7 @@ class TimerActivity : AppCompatActivity() {
         setContentView(R.layout.study_timer)
 
         progressBar = findViewById(R.id.progressbar)
-        timerText = findViewById(R.id.timerTexts)
+        timerText = findViewById(R.id.studyOnTimerTV)
         exitButton = findViewById(R.id.exitStudy)
         roundCounter = findViewById(R.id.roundCounterTV)
 
@@ -49,6 +45,7 @@ class TimerActivity : AppCompatActivity() {
         val selectedStudyOn = intent.getStringExtra("selectedStudyOn")
         val intentSelectedRoundsString = intent.getStringExtra("selectedRounds")
 
+        val selectedStudyOff = intent.getStringExtra("selectedStudyOff")
 
         val studyOnMinutes = selectedStudyOn?.let { extractNumberFromString(it) } ?: 0
         val restartTimer = intent.getBooleanExtra("restartTimer", false)
@@ -86,8 +83,9 @@ class TimerActivity : AppCompatActivity() {
             },
             onFinish = {
                 // Timer finished, handle it as needed
-                val intent= Intent(this@TimerActivity,BreakActivity::class.java)
-                startActivity(intent)
+                val gotoBreak= Intent(this@TimerActivity,BreakActivity::class.java)
+                gotoBreak.putExtra("selectedStudyOff", selectedStudyOff) //
+                startActivity(gotoBreak)
                 roundNumber++
             }
         )
