@@ -150,8 +150,6 @@ class TimerActivity : AppCompatActivity() {
 
         // INSERT TO MAIN DATABASE ----------------------------------
         mainDatabase.insertTableTaskDetails(
-                weekNumber,
-                weekMonday,
                 currentDate,
                 studyGoal,
                 selectedSubject,
@@ -172,6 +170,8 @@ class TimerActivity : AppCompatActivity() {
         Log.d("MainDatabase", "TimerActivity getTasksForLast7Days() TASK INFO7: $taskInfo7")
         val taskDuration7 = mainDatabase.getTotalDurationByCategoryLast7Days(currentDate)
         Log.d("MainDatabase", "TimerActivity getTotalDurationByCategoryLast7Days: $taskDuration7")
+        val streak = mainDatabase.getStudyStreak()
+        Log.d("MainDatabase", "TimerActivity getStudyStreak: $streak")
     }
 
     override fun onDestroy() {

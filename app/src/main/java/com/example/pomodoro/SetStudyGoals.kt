@@ -78,7 +78,6 @@ class SetStudyGoals : Fragment() {
             }
             startActivity(intent)
 
-
         }
 
         // Set a click listener for the "Tap to calculate Study Time" button

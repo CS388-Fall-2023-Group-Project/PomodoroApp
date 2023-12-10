@@ -6,11 +6,14 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import java.util.Random
 
 class MainDatabase (context: Context): SQLiteOpenHelper(context,
-        MainDatabase.DATABASE_NAME, null,
-        MainDatabase.DATABASE_VERSION
+    MainDatabase.DATABASE_NAME, null,
+    MainDatabase.DATABASE_VERSION
 ) {
     companion object {
         private const val DATABASE_VERSION = 1
@@ -31,6 +34,9 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         const val COLUMN_ROUNDS = "Rounds"
     }
 
+    private val dummyID = listOf(1, 2, 3, 4, 5, 6, 7, 8)
+    private val dummyDates = listOf("2023-11-30", "2023-12-1", "2023-12-2", "2023-11-4", "2023-12-5", "2023-12-6", "2023-12-7", "2023-12-8")
+    private val dummySubjects = listOf("Math", "Reading", "Chemistry", "Computing", "Spanish", "History")
     override fun onCreate(db: SQLiteDatabase?) {
         val createTableTaskDetails = """
             CREATE TABLE $TABLE_TASK_DETAILS (
@@ -67,27 +73,55 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
 
         db?.execSQL(createTableTaskDetails)
         db?.execSQL(createTableTask7Days)
-    }
 
+        // Insert dummy rows with the specified ID
+        for (date in dummyDates) {
+            if (db != null) {
+                insertDummy(db, date)
+            }
+        }
+    }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_TASK_DETAILS")
         onCreate(db)
     }
 
+    private fun insertDummy(db: SQLiteDatabase, date: String) {
+        val rndSubject = dummySubjects.random()
+
+        val contentValues = ContentValues().apply {
+            put(COLUMN_TASK_NAME, "Revise for exam")
+            put(COLUMN_SUBJECT, rndSubject)
+            put(COLUMN_STUDY_ON, "1")
+            put(COLUMN_STUDY_OFF, "1")
+            put(COLUMN_CURRENT_TIME_START,"9:00 AM")
+            put(COLUMN_CURRENT_TIME_END,"11:00 AM")
+            put(COLUMN_TIME_RANGE, "10:00 AM - 11:00 AM")
+            put(COLUMN_DATE, date)
+            put(COLUMN_DURATION, (1..5).random())
+            put(COLUMN_ROUNDS, "1")
+        }
+
+        db.insertWithOnConflict(
+            TABLE_TASK_DETAILS,
+            null,
+            contentValues,
+            SQLiteDatabase.CONFLICT_REPLACE
+        )
+    }
+
     fun insertTableTaskDetails(
-            weekNumber: Int,
-            weekMonday: String,
-            date: String,
-            taskName: String,
-            subject: String,
-            studyOn: String,
-            studyOff: String,
-            currentTimeStart: String,
-            currentTimeEnd: String,
-            timeRange: String,
-            duration: Int,
-            rounds: Int,
+        date: String,
+        taskName: String,
+        subject: String,
+        studyOn: String,
+        studyOff: String,
+        currentTimeStart: String,
+        currentTimeEnd: String,
+        timeRange: String,
+        duration: Int,
+        rounds: Int,
     ) {
         val values = ContentValues().apply {
             put(COLUMN_DATE, date)
@@ -105,16 +139,16 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
     }
 
     fun insertTableTask7Days(
-            date: String,
-            taskName: String,
-            subject: String,
-            studyOn: String,
-            studyOff: String,
-            currentTimeStart: String,
-            currentTimeEnd: String,
-            timeRange: String,
-            duration: Int,
-            rounds: Int,
+        date: String,
+        taskName: String,
+        subject: String,
+        studyOn: String,
+        studyOff: String,
+        currentTimeStart: String,
+        currentTimeEnd: String,
+        timeRange: String,
+        duration: Int,
+        rounds: Int,
     ) {
         val values = ContentValues().apply {
             put(COLUMN_DATE, date)
@@ -129,7 +163,7 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
             put(COLUMN_ROUNDS, rounds)
         }
         writableDatabase.insert(TABLE_TASK_DETAILS, null, values)
-        Log.d("MainDatabase", "insertTableTask7Days works")
+        Log.d("MainDatabase", "insertTableTask7Days works!")
     }
 
     fun deleteOutdatedTasks(fromDate: String) {
@@ -143,13 +177,64 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         }
     }
 
+    private fun isConsecutiveDays(date_1: String, date_2: String?): Boolean {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val calendar_1 = Calendar.getInstance()
+        val calendar_2 = Calendar.getInstance()
+
+        calendar_1.time = dateFormat.parse(date_1) ?: return false
+        calendar_2.time = dateFormat.parse(date_2) ?: return false
+
+        return (calendar_1.get(Calendar.YEAR) == calendar_2.get(Calendar.YEAR) &&
+                calendar_1.get(Calendar.MONTH) == calendar_2.get(Calendar.MONTH) &&
+                calendar_1.get(Calendar.DAY_OF_MONTH) == calendar_2.get(Calendar.DAY_OF_MONTH) - 1)
+    }
+    @SuppressLint("Range")
+    fun getStudyStreak(): Int {
+        val db = readableDatabase
+        val query =
+            """
+        SELECT $COLUMN_DATE
+        FROM $TABLE_TASK_DETAILS
+        WHERE $COLUMN_DURATION >= 0 
+        ORDER BY $COLUMN_DATE DESC
+        """.trimIndent()
+        try {
+            val cursor = db.rawQuery(query, null)
+            var streakCount = 0
+            var currentDate: String? = null
+
+            cursor.use {
+                while (it.moveToNext()) {
+                    val date = it.getString(it.getColumnIndex(MainDatabase.COLUMN_DATE))
+
+                    if (currentDate == null || isConsecutiveDays(currentDate!!, date)) {
+                        streakCount++
+                    } else {
+                        break  // Break the streak if there is a gap between consecutive days
+                    }
+
+                    currentDate = date
+                }
+            }
+
+            return streakCount
+        } catch (e: Exception) {
+            Log.e("MainDatabase", "Error calculating study streak", e)
+        } finally {
+            db.close()
+        }
+
+        return 0  // Return 0 if there is an error or no streak is found
+    }
+
     @SuppressLint("Range")
     fun getTasksForDate(date: String): List<TaskInfo> {
         val tasks = mutableListOf<TaskInfo>()
         val db = readableDatabase
 
         val query =
-                "SELECT * FROM ${MainDatabase.TABLE_TASK_DETAILS} WHERE ${MainDatabase.COLUMN_DATE} = ?"
+            "SELECT * FROM ${MainDatabase.TABLE_TASK_DETAILS} WHERE ${MainDatabase.COLUMN_DATE} = ?"
 
         try {
             val cursor = db.rawQuery(query, arrayOf(date))
@@ -167,7 +252,7 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
                 }
             }
         } catch (e: Exception) {
-            Log.e("MainDatabase", "Error fetching tasks for date: $date", e)
+            Log.e("MainDatabase", "Error fetching tasks for date getTasksForDate(): $date", e)
         } finally {
             db.close()
         }
@@ -180,11 +265,19 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         val tasks = mutableListOf<TaskInfo7Days>()
         val db = readableDatabase
 
-        val query =
+        try {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val currentDate = dateFormat.parse(fromDate)
+            val calendar = Calendar.getInstance()
+            calendar.time = currentDate
+            // Subtract 7 days from the current date
+            calendar.add(Calendar.DAY_OF_YEAR, -7)
+            val sevenDaysAgo = dateFormat.format(calendar.time)
+
+            val query =
                 "SELECT * FROM ${MainDatabase.TABLE_TASK_7DAYS} WHERE ${MainDatabase.COLUMN_DATE} >= ?"
 
-        try {
-            val cursor = db.rawQuery(query, arrayOf(fromDate))
+            val cursor = db.rawQuery(query, arrayOf(sevenDaysAgo))
 
             cursor.use {
                 while (it.moveToNext()) {
@@ -212,7 +305,7 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         val db = readableDatabase
 
         val query =
-                """
+            """
         SELECT $COLUMN_SUBJECT, SUM($COLUMN_DURATION) as total_duration
         FROM $TABLE_TASK_DETAILS
         WHERE $COLUMN_DATE >= ?
@@ -240,11 +333,11 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
 }
 
 data class TaskInfo7Days (
-        var id: Int = 1,
-        var task: String = "",
-        var subject: String = "",
-        var timerange: String = "",
-        var duration: Int? = null
+    var id: Int = 1,
+    var task: String = "",
+    var subject: String = "",
+    var timerange: String = "",
+    var duration: Int? = null
 ){
     companion object{
         fun getAutoId(): Int{
