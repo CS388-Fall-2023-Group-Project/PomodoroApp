@@ -204,11 +204,6 @@ class TimerActivity : AppCompatActivity() {
         Log.d("MainDatabase", "TimerActivity inserted data of $currentDate to TABLE_TASK_DETAILS")
     }
 
-    override fun onDestroy() {
-        // Cancel the timer to avoid memory leaks
-        super.onDestroy()
-        countdownTimer.cancel()
-    }
 
     private fun formatTime(millis: Long): String {
         val hours = TimeUnit.MILLISECONDS.toHours(millis)
@@ -296,6 +291,17 @@ class TimerActivity : AppCompatActivity() {
             notificationManager.createNotificationChannel(channel)
         }
     }
+
+    override fun onDestroy() {
+        // Cancel the timer to avoid memory leaks
+        super.onDestroy()
+        countdownTimer.cancel()
+    }
+
+    override fun onBackPressed() {
+
+    }
+
 
 
 }

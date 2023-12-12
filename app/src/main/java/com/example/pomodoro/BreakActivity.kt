@@ -84,7 +84,6 @@ class BreakActivity: AppCompatActivity() {
                 // For example, navigate back to the previous activity
                 val returnStudy= Intent(this@BreakActivity,TimerActivity::class.java)
                 returnStudy.putExtra("restartTimer", true)
-                countdownTimer.cancel()
                 startActivity(returnStudy)
 
             }
@@ -95,7 +94,6 @@ class BreakActivity: AppCompatActivity() {
         exitButton.setOnClickListener {
             // Navigate back to the home fragment or activity
 
-            countdownTimer.cancel()
             val returnStudy= Intent(this@BreakActivity,TimerActivity::class.java)
             returnStudy.putExtra("restartTimer", true)
             startActivity(returnStudy)
@@ -111,11 +109,7 @@ class BreakActivity: AppCompatActivity() {
 
         return String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }
-    override fun onDestroy() {
-        super.onDestroy()
-        // Cancel the timer to avoid memory leaks
-        countdownTimer.cancel()
-    }
+
     private fun restartTimer2() {
         // Your logic to restart the timer goes here
         // For example, create a new instance of CountdownTimerHelper and start it
@@ -140,5 +134,16 @@ class BreakActivity: AppCompatActivity() {
             else -> throw IllegalArgumentException("Unsupported time unit: $unit")
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Cancel the timer to avoid memory leaks
+        countdownTimer.cancel()
+    }
+
+    override fun onBackPressed() {
+
+    }
+
 
 }
