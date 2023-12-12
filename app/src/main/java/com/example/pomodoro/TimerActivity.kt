@@ -82,8 +82,7 @@ class TimerActivity : AppCompatActivity() {
             onFinish = {
                 // Timer finished, handle it as needed
                 val gotoBreak= Intent(this@TimerActivity,BreakActivity::class.java)
-                gotoBreak.putExtra("selectedStudyOff", selectedStudyOff) //
-                countdownTimer.cancel()
+                gotoBreak.putExtra("selectedStudyOff", selectedStudyOff)
                 startActivity(gotoBreak)
                 roundNumber++
             }
