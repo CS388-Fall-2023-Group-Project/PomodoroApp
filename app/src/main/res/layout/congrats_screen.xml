@@ -1,11 +1,9 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/confetti"
     android:background="@android:color/white">
-
-
-
 
     <TextView
         android:id="@+id/congratsMessage"
@@ -14,14 +12,18 @@
         android:text="Congrats! You completed an entire study session"
         android:textSize="18sp"
         android:textColor="@android:color/black"
-        android:layout_centerInParent="true"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <Button
         android:id="@+id/gotoHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Go to the Home Screen"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

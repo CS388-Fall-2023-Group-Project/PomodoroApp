@@ -15,10 +15,7 @@ class CongratsActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.congrats_screen)
-        val confettiContainer= findViewById<RelativeLayout>(R.id.confetti)
-
-        // Initialize confetti animation
-
+        val confettiContainer= findViewById<ConstraintLayout>(R.id.confetti)
          CommonConfetti.rainingConfetti(confettiContainer, intArrayOf(Color.RED, Color.GREEN, Color.BLUE)).oneShot()
 
         // Update the congratulatory message
