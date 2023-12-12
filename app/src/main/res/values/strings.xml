@@ -60,6 +60,7 @@
         <item>8</item>
     </string-array>
 
+    <string name="finish_message">With this ratio, you are set to finish at %1$s</string>
     <string name="round_counter">Round: %1$d</string>
 
 </resources>
