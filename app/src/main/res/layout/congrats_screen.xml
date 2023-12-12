@@ -19,4 +19,12 @@
         android:textColor="@android:color/black"
         android:layout_centerInParent="true"/>
 
-    </RelativeLayout>
+    <Button
+        android:id="@+id/gotoHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to the Home Screen"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>/>
+
+</RelativeLayout>

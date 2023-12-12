@@ -83,18 +83,12 @@ class TimerActivity : AppCompatActivity() {
                 // Timer finished, handle it as needed
                 val gotoBreak= Intent(this@TimerActivity,BreakActivity::class.java)
                 gotoBreak.putExtra("selectedStudyOff", selectedStudyOff) //
+                countdownTimer.cancel()
                 startActivity(gotoBreak)
                 roundNumber++
             }
         )
 
-        if (roundNumber > intentSelectedRounds) {
-            roundNumber--;
-            val congratsIntent = Intent(this@TimerActivity, CongratsActivity::class.java)
-            startActivity(congratsIntent)
-
-
-        }
 
             // Start the countdown timer
         countdownTimer.start()
@@ -102,7 +96,6 @@ class TimerActivity : AppCompatActivity() {
         exitButton.setOnClickListener {
             // Current Time End: Get the time when user end the session
             val currentTimeEnd = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
-
             // Week Number
             val calendar = Calendar.getInstance()
             val weekNumber = calendar.get(Calendar.WEEK_OF_YEAR)
@@ -118,6 +111,18 @@ class TimerActivity : AppCompatActivity() {
             Log.d("MainDatabase", "Exit Button | Monday date: $weekMonday")
             // Navigate back to the home fragment or activity
             finish()
+
+
+
+        }
+
+        if (roundNumber > intentSelectedRounds) {
+            countdownTimer.cancel()
+            roundNumber--;
+            val congratsIntent = Intent(this@TimerActivity, CongratsActivity::class.java)
+
+            startActivity(congratsIntent)
+
 
         }
 
@@ -176,8 +181,8 @@ class TimerActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         // Cancel the timer to avoid memory leaks
+        super.onDestroy()
         countdownTimer.cancel()
     }
 

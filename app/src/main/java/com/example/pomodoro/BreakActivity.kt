@@ -84,7 +84,9 @@ class BreakActivity: AppCompatActivity() {
                 // For example, navigate back to the previous activity
                 val returnStudy= Intent(this@BreakActivity,TimerActivity::class.java)
                 returnStudy.putExtra("restartTimer", true)
+                countdownTimer.cancel()
                 startActivity(returnStudy)
+
             }
         )
 
