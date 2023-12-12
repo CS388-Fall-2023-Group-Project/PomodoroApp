@@ -44,6 +44,8 @@ class Fragment_History : Fragment() {
             val taskInfo = dbHelper.getTasksForDate(formattedDate)
             Log.d("MainDatabase", "Fragment_History getTasksForDate: $formattedDate")
             Log.d("MainDatabase", "Fragment_History getTasksForDate TASK DETAILS: $taskInfo")
+            val taskInfo7 = dbHelper.getTasksForLast7Days()
+            Log.d("MainDatabase", "Fragment_History getTasksForLast7Days: $taskInfo7")
             historyAdapter.updateData(taskInfo)
 
         }
