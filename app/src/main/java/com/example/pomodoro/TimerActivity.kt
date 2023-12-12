@@ -37,8 +37,8 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var countdownTimer: CountdownTimerHelper
     private lateinit var exitButton: Button
     private lateinit var roundCounter: TextView
-    private lateinit var welcomeBackDialog: Dialog
 
+    private lateinit var welcomeBackDialog: Dialog
     private var roundNumber =1
 
     // making a a unique notif based on what time it is
@@ -59,7 +59,6 @@ class TimerActivity : AppCompatActivity() {
         timerText = findViewById(R.id.studyOnTimerTV)
         exitButton = findViewById(R.id.exitStudy)
         roundCounter = findViewById(R.id.roundCounterTV)
-
 
 
         val selectedStudyOn = intent.getStringExtra("selectedStudyOn")
@@ -90,28 +89,26 @@ class TimerActivity : AppCompatActivity() {
         val interval = 1000L // 1 second
 
         countdownTimer = CountdownTimerHelper(
-                totalTimeInMillis = totalTimeInMillis,
-                interval = interval,
-                onTick = { millisUntilFinished ->
-                    val progress = (millisUntilFinished.toFloat() / totalTimeInMillis * 100).toInt()
-                    progressBar.progress = progress
+            totalTimeInMillis = totalTimeInMillis,
+            interval = interval,
+            onTick = { millisUntilFinished ->
+                val progress = (millisUntilFinished.toFloat() / totalTimeInMillis * 100).toInt()
+                progressBar.progress = progress
 
-                    // Update the timer text
-                    val formattedTime = formatTime(millisUntilFinished)
-                    timerText.text = formattedTime
-                },
-                onFinish = {
-                    // Timer finished, handle it as needed
-                    val intent= Intent(this@TimerActivity,BreakActivity::class.java)
-                    startActivity(intent)
-                }
+                // Update the timer text
+                val formattedTime = formatTime(millisUntilFinished)
+                timerText.text = formattedTime
+            },
+            onFinish = {
+                // Timer finished, handle it as needed
+                val gotoBreak= Intent(this@TimerActivity,BreakActivity::class.java)
+                gotoBreak.putExtra("selectedStudyOff", selectedStudyOff)
+                startActivity(gotoBreak)
+                roundNumber++
+            }
+
         )
 
-        if (roundNumber > intentSelectedRounds) {
-            roundNumber--;
-            finish()
-
-        }
 
         // Start the countdown timer
         countdownTimer.start()
@@ -119,7 +116,6 @@ class TimerActivity : AppCompatActivity() {
         exitButton.setOnClickListener {
             // Current Time End: Get the time when user end the session
             val currentTimeEnd = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
-
             // Week Number
             val calendar = Calendar.getInstance()
             val weekNumber = calendar.get(Calendar.WEEK_OF_YEAR)
@@ -131,6 +127,18 @@ class TimerActivity : AppCompatActivity() {
             insertDataIntoDatabase(weekNumber, weekMonday, currentTimeEnd, roundNumber)
             // Navigate back to the home fragment or activity
             finish()
+
+
+
+        }
+
+        if (roundNumber > intentSelectedRounds) {
+            countdownTimer.cancel()
+            roundNumber--;
+            val congratsIntent = Intent(this@TimerActivity, CongratsActivity::class.java)
+
+            startActivity(congratsIntent)
+
 
         }
 
@@ -206,8 +214,8 @@ class TimerActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         // Cancel the timer to avoid memory leaks
+        super.onDestroy()
         countdownTimer.cancel()
     }
 
