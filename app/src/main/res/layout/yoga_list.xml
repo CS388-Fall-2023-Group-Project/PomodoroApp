@@ -74,7 +74,13 @@
         app:layout_constraintStart_toStartOf="@+id/progressBar2"
         app:layout_constraintTop_toTopOf="@+id/progressBar2" />
 
-
+    <TextView
+        android:id="@+id/breakRoundCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Round: "
+        tools:layout_editor_absoluteX="109dp"
+        tools:layout_editor_absoluteY="128dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,7 @@ class BreakActivity: AppCompatActivity() {
     private lateinit var timerText: TextView
     private lateinit var countdownTimer: CountdownTimerHelper
     private lateinit var exitButton: Button
+    private lateinit var breakRoundCounter: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +36,12 @@ class BreakActivity: AppCompatActivity() {
         val selectedStudyOff = intent.getStringExtra("selectedStudyOff")
 
         val studyOffMinutes = selectedStudyOff?.let { extractNumberFromString(it) } ?: 0
+
+        breakRoundCounter = findViewById(R.id.breakRoundCounter)  // Replace with your TextView's ID
+        // Retrieve roundNumber from the Intent
+        val roundNumber = intent.getIntExtra("roundNumber", 1)
+        // Set roundNumber to breakRoundCounter TextView
+        breakRoundCounter.text = getString(R.string.break_round_counter, roundNumber)
 
 
         val webView: WebView = findViewById(R.id.webView)
@@ -59,14 +66,26 @@ class BreakActivity: AppCompatActivity() {
             // Handle UI events here if needed
         }
 
-        if (restartTimer) {
-            restartTimer2()
+       // if (restartTimer) {
+            startTimer(studyOffMinutes)
+       // }
+
+        if(restartTimer){
+            startTimer(studyOffMinutes)
         }
+        exitButton.setOnClickListener {
+            // Navigate back to the home fragment or activity
 
-        val totalTimeInMillis = studyOffMinutes.toLong() // 1 minute
+            val returnStudy= Intent(this@BreakActivity,TimerActivity::class.java)
+           // returnStudy.putExtra("restartTimer", true)
+            startActivity(returnStudy)
+
+
+        }
+    }
+
+    private fun startTimer(totalTimeInMillis: Long) {
         val interval = 1000L // 1 second
-
-
 
         countdownTimer = CountdownTimerHelper(
             totalTimeInMillis = totalTimeInMillis,
@@ -81,25 +100,17 @@ class BreakActivity: AppCompatActivity() {
             },
             onFinish = {
                 // Timer finished, handle it as needed
-                // For example, navigate back to the previous activity
-                val returnStudy= Intent(this@BreakActivity,TimerActivity::class.java)
+                // For example, navigate back to the TimerActivity
+                val returnStudy = Intent(this@BreakActivity, TimerActivity::class.java)
                 returnStudy.putExtra("restartTimer", true)
                 startActivity(returnStudy)
-
+                finish()
             }
         )
 
         countdownTimer.start()
-
-        exitButton.setOnClickListener {
-            // Navigate back to the home fragment or activity
-
-            val returnStudy= Intent(this@BreakActivity,TimerActivity::class.java)
-            returnStudy.putExtra("restartTimer", true)
-            startActivity(returnStudy)
-
-        }
     }
+
 
 
     private fun formatTime(millis: Long): String {
@@ -110,15 +121,6 @@ class BreakActivity: AppCompatActivity() {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }
 
-    private fun restartTimer2() {
-        // Your logic to restart the timer goes here
-        // For example, create a new instance of CountdownTimerHelper and start it
-        countdownTimer.cancel()
-
-        // Start a new timer
-        countdownTimer.start()
-
-    }
 
 
     private fun extractNumberFromString(timeString: String): Long {

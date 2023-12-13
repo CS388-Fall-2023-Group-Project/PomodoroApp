@@ -37,6 +37,9 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var countdownTimer: CountdownTimerHelper
     private lateinit var exitButton: Button
     private lateinit var roundCounter: TextView
+    private var isLeavingApp = false
+
+    private var isTimerRunning = false
 
     private lateinit var welcomeBackDialog: Dialog
     private var roundNumber =1
@@ -77,41 +80,18 @@ class TimerActivity : AppCompatActivity() {
 
         }
 
+
+
+        startNewTimerIfNeeded()
         updateRoundCounterText()
 
-        // If the flag is true, restart the timer
-        if (restartTimer) {
-            restartTimer()
-        }
+        //if (restartTimer){
+            //startNewTimerIfNeeded()
+      //  }
 
 
-        val totalTimeInMillis = studyOnMinutes.toLong() // 1 minute
-        val interval = 1000L // 1 second
-
-        countdownTimer = CountdownTimerHelper(
-            totalTimeInMillis = totalTimeInMillis,
-            interval = interval,
-            onTick = { millisUntilFinished ->
-                val progress = (millisUntilFinished.toFloat() / totalTimeInMillis * 100).toInt()
-                progressBar.progress = progress
-
-                // Update the timer text
-                val formattedTime = formatTime(millisUntilFinished)
-                timerText.text = formattedTime
-            },
-            onFinish = {
-                // Timer finished, handle it as needed
-                val gotoBreak= Intent(this@TimerActivity,BreakActivity::class.java)
-                gotoBreak.putExtra("selectedStudyOff", selectedStudyOff)
-                startActivity(gotoBreak)
-                roundNumber++
-            }
-
-        )
 
 
-        // Start the countdown timer
-        countdownTimer.start()
 
         exitButton.setOnClickListener {
             // Current Time End: Get the time when user end the session
@@ -133,15 +113,6 @@ class TimerActivity : AppCompatActivity() {
 
         }
 
-        if (roundNumber > intentSelectedRounds) {
-            countdownTimer.cancel()
-            roundNumber--;
-            val congratsIntent = Intent(this@TimerActivity, CongratsActivity::class.java)
-
-            startActivity(congratsIntent)
-
-
-        }
 
         // Initialize the welcome back dialog
         welcomeBackDialog = Dialog(this)
@@ -158,6 +129,68 @@ class TimerActivity : AppCompatActivity() {
     }
 
 
+    private fun startNewTimerIfNeeded() {
+        // Check if the current round is less than or equal to the selected rounds
+
+        val intentSelectedRoundsString = intent.getStringExtra("selectedRounds")
+        val intentSelectedRounds = intentSelectedRoundsString?.toIntOrNull() ?: 0
+        val selectedStudyOff = intent.getStringExtra("selectedStudyOff")
+
+
+        val selectedStudyOn = intent.getStringExtra("selectedStudyOn")
+        val studyOnMinutes = selectedStudyOn?.let { extractNumberFromString(it) } ?: 0
+        if (roundNumber <= intentSelectedRounds) {
+            // Initialize and start a new countdown timer
+            val totalTimeInMillis = studyOnMinutes.toLong() // 1 minute
+            val interval = 1000L // 1 second
+
+            countdownTimer = CountdownTimerHelper(
+                totalTimeInMillis = totalTimeInMillis,
+                interval = interval,
+                onTick = { millisUntilFinished ->
+                    val progress = (millisUntilFinished.toFloat() / totalTimeInMillis * 100).toInt()
+                    progressBar.progress = progress
+
+                    // Update the timer text
+                    val formattedTime = formatTime(millisUntilFinished)
+                    timerText.text = formattedTime
+                },
+                onFinish = {
+                    // Timer finished, handle it as needed
+                    if (roundNumber <= intentSelectedRounds) {
+                        // Only start a new timer if the current round is within the selected rounds
+                        val breakintent = Intent(this@TimerActivity, BreakActivity::class.java)
+                        breakintent.putExtra("selectedStudyOff", selectedStudyOff)
+                        breakintent.putExtra("roundNumber",roundNumber)
+                        startActivity(breakintent)
+                        finish()
+                    }
+                    if (roundNumber > intentSelectedRounds) {
+                        // Show your CongratsActivity or handle the end of the study session
+                        roundNumber--;
+                        val congratsIntent = Intent(this@TimerActivity, CongratsActivity::class.java)
+                        startActivity(congratsIntent)
+                        finish()
+
+                    } else {
+                        // Start a new timer if needed
+                        startNewTimerIfNeeded()
+                    }
+
+                    if (isLeavingApp) {
+                        // Show notification only when leaving the app
+                        showSwipeAwayNotification()
+                    }
+
+                    isLeavingApp = false
+                }
+            )
+
+            // Start the countdown timer
+            countdownTimer.start()
+            isTimerRunning = true
+        }
+    }
     private fun updateRoundCounterText() {
         roundCounter.text = getString(R.string.round_counter, roundNumber)
     }
@@ -243,8 +276,8 @@ class TimerActivity : AppCompatActivity() {
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
         // User swiped out of the app, show notification
-        showSwipeAwayNotification()
-        restartTimer()
+        isLeavingApp = true
+        startNewTimerIfNeeded()
     }
 
     private fun showSwipeAwayNotification() {
@@ -295,7 +328,9 @@ class TimerActivity : AppCompatActivity() {
     override fun onDestroy() {
         // Cancel the timer to avoid memory leaks
         super.onDestroy()
-        countdownTimer.cancel()
+        if (isTimerRunning) {
+            countdownTimer.cancel()
+        }
     }
 
     override fun onBackPressed() {
