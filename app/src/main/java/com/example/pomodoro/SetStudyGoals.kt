@@ -57,7 +57,7 @@ class SetStudyGoals : Fragment() {
             val selectedStudyOff = studyOffSpinner.selectedItem.toString()
             val selectedRounds = roundsSpinner.selectedItem.toString()
 
-            val currentDate = SimpleDateFormat("yyyy-MM-d", Locale.getDefault()).format(Date())
+            val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
             val currentTimeStart = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
 
             // -------------------- INITIALIZE INTENT --------------------
@@ -77,7 +77,6 @@ class SetStudyGoals : Fragment() {
                 putExtra("selectedRounds", selectedRounds)
             }
             startActivity(intent)
-
 
         }
 

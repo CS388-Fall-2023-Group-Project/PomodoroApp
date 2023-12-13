@@ -125,6 +125,7 @@ class TimerActivity : AppCompatActivity() {
             val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val weekMonday = simpleDateFormat.format(calendar.time)
             insertDataIntoDatabase(weekNumber, weekMonday, currentTimeEnd, roundNumber)
+
             // Navigate back to the home fragment or activity
             finish()
 
@@ -189,8 +190,6 @@ class TimerActivity : AppCompatActivity() {
 
         // INSERT TO MAIN DATABASE ----------------------------------
         mainDatabase.insertTableTaskDetails(
-                weekNumber,
-                weekMonday,
                 currentDate,
                 studyGoal,
                 selectedSubject,
@@ -203,14 +202,6 @@ class TimerActivity : AppCompatActivity() {
                 roundNumber
         )
         Log.d("MainDatabase", "TimerActivity inserted data of $currentDate to TABLE_TASK_DETAILS")
-        // DELETE OUTDATED DATE
-        // mainDatabase.deleteOutdatedTasks(fromDate = currentDate)
-        // mainDatabase.getTasksForLast7Days(fromDate = currentDate)
-        // mainDatabase.getTotalDurationByCategoryLast7Days(fromDate = currentDate)
-        val taskInfo7 = mainDatabase.getTasksForDate(currentDate)
-        Log.d("MainDatabase", "TimerActivity getTasksForLast7Days() TASK INFO7: $taskInfo7")
-        val taskDuration7 = mainDatabase.getTotalDurationByCategoryLast7Days(currentDate)
-        Log.d("MainDatabase", "TimerActivity getTotalDurationByCategoryLast7Days: $taskDuration7")
     }
 
     override fun onDestroy() {
