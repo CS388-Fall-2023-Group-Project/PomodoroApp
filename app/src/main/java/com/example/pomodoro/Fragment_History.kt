@@ -45,12 +45,16 @@ class Fragment_History : Fragment() {
             val formattedDate = formatDate(year, month + 1, dayOfMonth)
             // Retrieve tasks for the selected date from the database
             val taskInfo = dbHelper.getTasksForDate(formattedDate)
-            Log.d("MainDatabase", "Fragment_History getTasksForDate: $formattedDate")
-            Log.d("MainDatabase", "Fragment_History getTasksForDate TASK DETAILS: $taskInfo")
-            val taskInfo7 = dbHelper.getTasksForLast7Days()
-            Log.d("MainDatabase", "Fragment_History getTasksForLast7Days: $taskInfo7")
-            val streak = dbHelper.calculateStudyStreak()
-            Log.d("MainDatabase", "Streak: $streak")
+
+            // Log.d("MainDatabase", "Fragment_History getTasksForDate: $formattedDate")
+            // Log.d("MainDatabase", "Fragment_History getTasksForDate TASK DETAILS: $taskInfo")
+            // val taskInfo7 = dbHelper.getTasksForLast7Days()
+            // Log.d("MainDatabase", "Fragment_History getTasksForLast7Days: $taskInfo7")
+            // val streak = dbHelper.calculateStudyStreak()
+            // Log.d("MainDatabase", "Streak: $streak")
+
+            // val duration = dbHelper.calculateTotalDurationBySubject(subject="Math")
+            // Log.d("MainDatabase", "duration: $duration")
             historyAdapter.updateData(taskInfo)
 
         }

@@ -205,4 +205,16 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         return streak
     }
 
+    fun calculateTotalDurationBySubject(subject: String): Int {
+        val tasksForLast7Days = getTasksForLast7Days()
+
+        // Filter tasks for the specified subject
+        val tasksForSubject = tasksForLast7Days.filter { it.subject == subject }
+
+        // Calculate the total duration for the specified subject
+        val totalDuration = tasksForSubject.sumBy { it.duration ?: 0 }
+
+        return totalDuration
+    }
+
 }
