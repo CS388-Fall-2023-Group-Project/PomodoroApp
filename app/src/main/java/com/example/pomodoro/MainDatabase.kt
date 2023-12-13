@@ -11,6 +11,8 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.Random
+import java.util.concurrent.TimeUnit
+import kotlin.math.max
 
 class MainDatabase (context: Context): SQLiteOpenHelper(context,
     MainDatabase.DATABASE_NAME, null,
@@ -21,7 +23,6 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         private const val DATABASE_NAME = "database.db"
 
         const val TABLE_TASK_DETAILS = "tbl_TaskDetails"
-        const val TABLE_TASK_7DAYS = "tbl_Task7Days"
         const val COLUMN_ID = "Id"
         const val COLUMN_DATE = "Date"
         const val COLUMN_TASK_NAME = "TaskName"
@@ -87,57 +88,6 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
     }
 
 
-    private fun isConsecutiveDays(date_1: String, date_2: String?): Boolean {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        val calendar_1 = Calendar.getInstance()
-        val calendar_2 = Calendar.getInstance()
-
-        calendar_1.time = dateFormat.parse(date_1) ?: return false
-        calendar_2.time = dateFormat.parse(date_2) ?: return false
-
-        return (calendar_1.get(Calendar.YEAR) == calendar_2.get(Calendar.YEAR) &&
-                calendar_1.get(Calendar.MONTH) == calendar_2.get(Calendar.MONTH) &&
-                calendar_1.get(Calendar.DAY_OF_MONTH) == calendar_2.get(Calendar.DAY_OF_MONTH) - 1)
-    }
-    @SuppressLint("Range")
-    fun getStudyStreak(): Int {
-        val db = readableDatabase
-        val query =
-            """
-        SELECT $COLUMN_DATE
-        FROM $TABLE_TASK_DETAILS
-        WHERE $COLUMN_DURATION >= 0 
-        ORDER BY $COLUMN_DATE DESC
-        """.trimIndent()
-        try {
-            val cursor = db.rawQuery(query, null)
-            var streakCount = 0
-            var currentDate: String? = null
-
-            cursor.use {
-                while (it.moveToNext()) {
-                    val date = it.getString(it.getColumnIndex(MainDatabase.COLUMN_DATE))
-
-                    if (currentDate == null || isConsecutiveDays(currentDate!!, date)) {
-                        streakCount++
-                    } else {
-                        break  // Break the streak if there is a gap between consecutive days
-                    }
-
-                    currentDate = date
-                }
-            }
-
-            return streakCount
-        } catch (e: Exception) {
-            Log.e("MainDatabase", "Error calculating study streak", e)
-        } finally {
-            db.close()
-        }
-
-        return 0  // Return 0 if there is an error or no streak is found
-    }
-
     @SuppressLint("Range")
     fun getTasksForDate(date: String): List<TaskInfo> {
         val tasks = mutableListOf<TaskInfo>()
@@ -152,12 +102,13 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
             cursor.use {
                 while (it.moveToNext()) {
                     val taskID = it.getInt(it.getColumnIndex(MainDatabase.COLUMN_ID))
+                    val date = it.getString(it.getColumnIndex(MainDatabase.COLUMN_DATE))
                     val taskName = it.getString(it.getColumnIndex(MainDatabase.COLUMN_TASK_NAME))
                     val taskCategory = it.getString(it.getColumnIndex(MainDatabase.COLUMN_SUBJECT))
                     val timeRange = it.getString(it.getColumnIndex(MainDatabase.COLUMN_TIME_RANGE))
                     val duration = it.getInt(it.getColumnIndex(MainDatabase.COLUMN_DURATION))
 
-                    val task = TaskInfo(taskID, taskName, taskCategory, timeRange, duration)
+                    val task = TaskInfo(taskID, date, taskName, taskCategory, timeRange, duration)
                     tasks.add(task)
                 }
             }
@@ -195,12 +146,13 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
             cursor.use {
                 while (it.moveToNext()) {
                     val taskID = it.getInt(it.getColumnIndex(MainDatabase.COLUMN_ID))
+                    val date = it.getString(it.getColumnIndex(MainDatabase.COLUMN_DATE))
                     val taskName = it.getString(it.getColumnIndex(MainDatabase.COLUMN_TASK_NAME))
                     val taskCategory = it.getString(it.getColumnIndex(MainDatabase.COLUMN_SUBJECT))
                     val timeRange = it.getString(it.getColumnIndex(MainDatabase.COLUMN_TIME_RANGE))
                     val duration = it.getInt(it.getColumnIndex(MainDatabase.COLUMN_DURATION))
 
-                    val task = TaskInfo(taskID, taskName, taskCategory, timeRange, duration)
+                    val task = TaskInfo(taskID, date, taskName, taskCategory, timeRange, duration)
                     tasks.add(task)
                 }
             }
@@ -210,52 +162,47 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
             db.close()
         }
 
+        tasks.sortByDescending { it.date }
+
         return tasks
     }
-    @SuppressLint("Range")
-    fun getTotalDurationByCategoryLast7Days(fromDate: String): Map<String, Int> {
-        val totalDurations = mutableMapOf<String, Int>()
-        val db = readableDatabase
 
-        val query =
-            """
-        SELECT $COLUMN_SUBJECT, SUM($COLUMN_DURATION) as total_duration
-        FROM $TABLE_TASK_DETAILS
-        WHERE $COLUMN_DATE >= ?
-        GROUP BY $COLUMN_SUBJECT
-        """.trimIndent()
+    fun calculateStudyStreak(): Int {
+        val tasksForLast7Days = getTasksForLast7Days()
+        if (tasksForLast7Days.isEmpty()) {
+            return 0 // No tasks in the last 7 days, streak is 0.
+        }
 
-        try {
-            val cursor = db.rawQuery(query, arrayOf(fromDate))
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        // Filter tasks with duration >= 1
+        val validTasks = tasksForLast7Days.filter { it.duration!! >= 1 }
 
-            cursor.use {
-                while (it.moveToNext()) {
-                    val category = it.getString(it.getColumnIndex(MainDatabase.COLUMN_SUBJECT))
-                    val totalDuration = it.getInt(it.getColumnIndex("total_duration"))
-                    totalDurations[category] = totalDuration
-                }
+        // Extract unique dates from valid tasks
+        val uniqueDates = validTasks.map { it.date }.toSet()
+
+        // Sort unique dates in descending order
+        val sortedDates = uniqueDates.sortedByDescending { dateFormat.parse(it) }
+
+        Log.d("MainDatabase", "Soted Unique Dates: $sortedDates")
+
+        val currentDate = dateFormat.parse(tasksForLast7Days[0].date)!!
+
+        var streak = 1 // At least one task in the last 7 days, so streak starts at 1.
+        for (i in 1 until sortedDates.size) {
+            val currentDate = dateFormat.parse(sortedDates[i - 1])!!
+            val currentDateTask = dateFormat.parse(sortedDates[i])!!
+
+            val difference = currentDate.time - currentDateTask.time
+            val daysDifference = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS)
+
+            if (daysDifference == 1L && currentDate.after(currentDateTask)) {
+                streak++
+            } else {
+                break // Break the loop if there is a gap in consecutive days.
             }
-        } catch (e: Exception) {
-            Log.e("MainDatabase", "Error calculating total duration by category", e)
-        } finally {
-            db.close()
         }
 
-        return totalDurations
+        return streak
     }
-}
 
-data class TaskInfo7Days (
-    var id: Int = 1,
-    var task: String = "",
-    var subject: String = "",
-    var timerange: String = "",
-    var duration: Int? = null
-){
-    companion object{
-        fun getAutoId(): Int{
-            val random = Random()
-            return random.nextInt(100)
-        }
-    }
 }

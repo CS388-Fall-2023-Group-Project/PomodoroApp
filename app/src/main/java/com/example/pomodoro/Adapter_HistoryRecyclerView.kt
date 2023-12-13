@@ -48,6 +48,7 @@ class Adapter_HistoryRecyclerView : RecyclerView.Adapter<Adapter_HistoryRecycler
 }
 data class TaskInfo (
     var id: Int = 1,
+    var date: String = "",
     var task: String = "",
     var subject: String = "",
     var timerange: String = "",

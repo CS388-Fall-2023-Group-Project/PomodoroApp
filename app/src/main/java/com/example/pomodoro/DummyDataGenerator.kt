@@ -16,8 +16,8 @@ class DummyDataGenerator(private val context: Context) {
         val currentDate = Calendar.getInstance()
 
         for (i in 1..7) {
-            val date = SimpleDateFormat("yyyy-MM-d", Locale.US).format(currentDate.time)
-            val taskName = "Task $i"
+            val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(currentDate.time)
+            val taskName = "Task Name"
             val subject = getRandomSubject()
             val studyOn = "Study On $i"
             val studyOff = "Study Off $i"
