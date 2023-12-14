@@ -10,11 +10,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Let's Study! What's your goal for the day?"
+            android:text="What is your goal for today?"
             android:gravity="center"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="40dp"
             />
-
         <EditText
             android:id="@+id/editTextStudyGoal"
             android:layout_width="match_parent"
@@ -140,20 +139,7 @@
         </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/calculateStudyTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tap to calculate Study Time"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/blue_button_background"
-            android:gravity="center"
-            android:layout_marginTop="470dp"
-            android:layout_marginLeft="60dp"
-            android:layout_marginRight="60dp"
-            android:padding="16dp"
-            android:textSize="18sp"
-            />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -173,12 +159,26 @@
             android:id="@+id/timeFinish"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="00:00"
+            android:text=""
             android:gravity="center"
-            android:textSize="50sp"
-            android:layout_marginTop="530dp"
+            android:textSize="15sp"
+            android:layout_marginTop="470dp"
             />
 
+        <TextView
+            android:id="@+id/calculateStudyTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tap to calculate Study Time"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/blue_button_background"
+            android:gravity="center"
+            android:layout_marginTop="490dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:padding="13dp"
+            android:textSize="14sp"
+            />
         <TextView
             android:id="@+id/startStudyingButton"
             android:layout_width="match_parent"
@@ -187,7 +187,7 @@
             android:textColor="#FFFFFF"
             android:background="@drawable/green_button_background"
             android:gravity="center"
-            android:layout_marginTop="600dp"
+            android:layout_marginTop="550dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:padding="16dp"
