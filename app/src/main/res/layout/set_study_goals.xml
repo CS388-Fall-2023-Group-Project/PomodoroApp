@@ -6,7 +6,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <TextView
             android:id="@+id/textViewWhatGoal"
@@ -31,7 +32,7 @@
             android:background="@drawable/edittext_outline"
             android:hint="ex: Revise Chapter 2"
             android:fontFamily="@font/inter"
-            android:paddingStart="20dp"
+            android:paddingStart="16dp"
             />
 
         <TextView
