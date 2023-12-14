@@ -177,47 +177,53 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         // Filter tasks with duration >= 1
         val validTasks = tasksForLast7Days.filter { it.duration!! >= 1 }
 
+        // Extract unique dates from valid tasks
+        val uniqueDates = validTasks.map { it.date }.toSet()
 
+        // Sort unique dates in descending order
+        val sortedDates = uniqueDates.sortedByDescending { dateFormat.parse(it) }
 
-            // Extract unique dates from valid tasks
-            val uniqueDates = validTasks.map { it.date }.toSet()
+        Log.d("MainDatabase", "Soted Unique Dates: $sortedDates")
 
-            // Sort unique dates in descending order
-            val sortedDates = uniqueDates.sortedByDescending { dateFormat.parse(it) }
+        val currentDate = dateFormat.parse(tasksForLast7Days[0].date)!!
 
-            Log.d("MainDatabase", "Soted Unique Dates: $sortedDates")
+        var streak = 1 // At least one task in the last 7 days, so streak starts at 1.
+        for (i in 1 until sortedDates.size) {
+            val currentDate = dateFormat.parse(sortedDates[i - 1])!!
+            val currentDateTask = dateFormat.parse(sortedDates[i])!!
 
-            val currentDate = dateFormat.parse(tasksForLast7Days[0].date)!!
+            val difference = currentDate.time - currentDateTask.time
+            val daysDifference = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS)
 
-            var streak = 1 // At least one task in the last 7 days, so streak starts at 1.
-            for (i in 1 until sortedDates.size) {
-                val currentDate = dateFormat.parse(sortedDates[i - 1])!!
-                val currentDateTask = dateFormat.parse(sortedDates[i])!!
-
-                val difference = currentDate.time - currentDateTask.time
-                val daysDifference = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS)
-
-                if (daysDifference == 1L && currentDate.after(currentDateTask)) {
-                    streak++
-                } else {
-                    break // Break the loop if there is a gap in consecutive days.
-
-                }
+            if (daysDifference == 1L && currentDate.after(currentDateTask)) {
+                streak++
+            } else {
+                break // Break the loop if there is a gap in consecutive days.
             }
-
-            return streak
         }
 
-        fun calculateTotalDurationBySubject(subject: String): Int {
-            val tasksForLast7Days = getTasksForLast7Days()
-
-            // Filter tasks for the specified subject
-            val tasksForSubject = tasksForLast7Days.filter { it.subject == subject }
-
-            // Calculate the total duration for the specified subject
-            val totalDuration = tasksForSubject.sumBy { it.duration ?: 0 }
-
-            return totalDuration
-        }
-
+        return streak
     }
+
+    fun calculateTotalDurationBySubject(subject: String): Int {
+        val tasksForLast7Days = getTasksForLast7Days()
+
+        // Filter tasks for the specified subject
+        val tasksForSubject = tasksForLast7Days.filter { it.subject == subject }
+
+        // Calculate the total duration for the specified subject
+        val totalDuration = tasksForSubject.sumBy { it.duration ?: 0 }
+
+        return totalDuration
+    }
+
+    fun calculateTotalDurationForDate(date: String): Int {
+        val tasksForDate = getTasksForDate(date)
+
+        // Calculate the total duration for the specified date
+        val totalDuration = tasksForDate.sumBy { it.duration ?: 0 }
+
+        return totalDuration
+    }
+
+}
