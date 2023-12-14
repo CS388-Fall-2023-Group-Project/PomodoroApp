@@ -41,6 +41,8 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var welcomeBackDialog: Dialog
     private var roundNumber =1
 
+
+    private var isTimerFinished = false
     // making a a unique notif based on what time it is
     private val NOTIFICATION_ID = System.currentTimeMillis().toInt()
     private val CHANNEL_ID = "timer_channel"
@@ -105,6 +107,8 @@ class TimerActivity : AppCompatActivity() {
                 gotoBreak.putExtra("selectedStudyOff", selectedStudyOff)
                 startActivity(gotoBreak)
                 roundNumber++
+                isTimerFinished = true
+
             }
 
         )
@@ -207,7 +211,10 @@ class TimerActivity : AppCompatActivity() {
     override fun onDestroy() {
         // Cancel the timer to avoid memory leaks
         super.onDestroy()
-        countdownTimer.cancel()
+        if (!isTimerFinished) {
+            countdownTimer.cancel()
+        }
+
     }
 
     private fun formatTime(millis: Long): String {
@@ -248,8 +255,10 @@ class TimerActivity : AppCompatActivity() {
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
         // User swiped out of the app, show notification
-        showSwipeAwayNotification()
-        restartTimer()
+        if (!isTimerFinished) {
+            showSwipeAwayNotification()
+            restartTimer()
+        }
     }
 
     private fun showSwipeAwayNotification() {
@@ -279,6 +288,7 @@ class TimerActivity : AppCompatActivity() {
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(NOTIFICATION_ID, builder.build())
         welcomeBackDialog.show()
+        isTimerFinished = false
     }
 
 
