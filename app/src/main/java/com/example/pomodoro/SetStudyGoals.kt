@@ -32,8 +32,8 @@ class SetStudyGoals : Fragment() {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.set_study_goals, container, false)
 
@@ -57,7 +57,7 @@ class SetStudyGoals : Fragment() {
             val selectedStudyOff = studyOffSpinner.selectedItem.toString()
             val selectedRounds = roundsSpinner.selectedItem.toString()
 
-            val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            val currentDate = SimpleDateFormat("yyyy-MM-d", Locale.getDefault()).format(Date())
             val currentTimeStart = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
 
             // -------------------- INITIALIZE INTENT --------------------
@@ -77,6 +77,7 @@ class SetStudyGoals : Fragment() {
                 putExtra("selectedRounds", selectedRounds)
             }
             startActivity(intent)
+
 
         }
 
@@ -104,29 +105,38 @@ class SetStudyGoals : Fragment() {
     }
 
     private fun calculateAndSetTimeFinish(studyOn: String, studyOff: String, rounds: String) {
-        val studyOnSeconds = extractNumberFromString(studyOn)
+        var message = "";
+        val studyOnMinutes = extractNumberFromString(studyOn)
+        println("Type of studyOnMinutes: ${studyOnMinutes::class.java}")
         val studyOffMinutes = extractNumberFromString(studyOff)
+        println("This is studyoff minutes [$studyOffMinutes]")
         val roundsCount = extractNumberFromString(rounds)
+        println("This is round  [$roundsCount]")
+        println("This is roundCount  [${roundsCount::class.java}]")
 
-        // Calculate the total study time in seconds
-        val totalStudyTimeSeconds = (studyOnSeconds + studyOffMinutes * 60) * roundsCount
 
-        // Convert total study time to minutes and seconds
-        val totalStudyTimeMinutes = totalStudyTimeSeconds / 60
-        val remainingSeconds = totalStudyTimeSeconds % 60
+        // Calculate the total study time in minutes
+        val totalStudyTime = (studyOnMinutes + studyOffMinutes) * roundsCount
+        println("This is total [$totalStudyTime]")
+        // finishing time
+        val endTime = Calendar.getInstance()
+        endTime.add(Calendar.MINUTE, totalStudyTime)
 
+        // Format the time in 12-hour format
+        val timeFinishFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val timeFinish = timeFinishFormat.format(endTime.time)
+        println(timeFinish)
         // Display the message with the calculated time
-        val message = getString(R.string.finish_message, "$totalStudyTimeMinutes minutes and $remainingSeconds seconds")
+        message = getString(R.string.finish_message, timeFinish)
         timeFinishTextView.text = message
     }
 
     private fun extractNumberFromString(input: String): Int {
-        // Assuming the timeString is in the format "X minutes" or "X seconds"
+        // Assuming the timeString is in the format "X minutes"
         val regex = """^(\d+)""".toRegex()
         val matchResult = regex.find(input)
 
         return matchResult?.groupValues?.get(1)?.toIntOrNull() ?: 0
     }
-
 
 }
