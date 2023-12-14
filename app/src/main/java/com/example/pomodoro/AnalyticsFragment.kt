@@ -69,43 +69,40 @@ class AnalyticsFragment : Fragment() {
             Past7days.add(it.format(formatter))
             val day7Stats = dbHelper.calculateTotalDurationForDate(it.format(formatter))
 
+            if ( day7Stats == 0) {
+                WeekList.add(0,0F)
+                WeekList.removeAt(6)
+            }
 
 
-
-                if ( day7Stats == 0) {
-                    WeekList.add(0,0F)
-                    WeekList.removeAt(6)
-                }
-
-
-                if ( day7Stats == 1) {
-                    WeekList.add(0,1F)
-                    WeekList.removeAt(6)
-                }
-                if ( day7Stats == 2) {
-                    WeekList.add(0,2F)
-                    WeekList.removeAt(6)
-                }
-                if ( day7Stats == 3) {
-                    WeekList.add(0,3F)
-                    WeekList.removeAt(6)
-                }
-                if ( day7Stats == 4) {
-                    WeekList.add(0,4F)
-                    WeekList.removeAt(6)
-                }
-                if ( day7Stats== 5) {
-                    WeekList.add(0,5F)
-                    WeekList.removeAt(6)
-                }
-                if ( day7Stats == 6) {
-                    WeekList.add(0,6F)
-                    WeekList.removeAt(6)
-                }
-                if ( day7Stats == 7) {
-                    WeekList.add(0,7F)
-                    WeekList.removeAt(6)
-                }
+            if ( day7Stats == 1) {
+                WeekList.add(0,1F)
+                WeekList.removeAt(6)
+            }
+            if ( day7Stats == 2) {
+                WeekList.add(0,2F)
+                WeekList.removeAt(6)
+            }
+            if ( day7Stats == 3) {
+                WeekList.add(0,3F)
+                WeekList.removeAt(6)
+            }
+            if ( day7Stats == 4) {
+                WeekList.add(0,4F)
+                WeekList.removeAt(6)
+            }
+            if ( day7Stats== 5) {
+                WeekList.add(0,5F)
+                WeekList.removeAt(6)
+            }
+            if ( day7Stats == 6) {
+                WeekList.add(0,6F)
+                WeekList.removeAt(6)
+            }
+            if ( day7Stats == 7) {
+                WeekList.add(0,7F)
+                WeekList.removeAt(6)
+            }
 
 
 
@@ -119,7 +116,7 @@ class AnalyticsFragment : Fragment() {
 
         val categoryCS= dbHelper.calculateTotalDurationBySubject("Computing")
         val categoryHistory= dbHelper.calculateTotalDurationBySubject("History")
-        val categoryMath= dbHelper.calculateTotalDurationBySubject("Computing")
+        // val categoryMath= dbHelper.calculateTotalDurationBySubject("Computing")
    //1
                 if ( categoryChemistry == 1) {
                     CategoryList.add(0,1F)
@@ -165,9 +162,9 @@ class AnalyticsFragment : Fragment() {
             CategoryList.add(1,7F)
         }
 ///3
-        if ( categoryMath== 1) {
-            CategoryList.add(3,1F)
-        }
+//        if ( categoryMath== 1) {
+//            CategoryList.add(3,1F)
+//        }
         if ( categoryHistory == 2) {
             CategoryList.add(3,2F)
         }

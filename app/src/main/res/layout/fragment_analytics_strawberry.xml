@@ -5,7 +5,7 @@
     android:id="@+id/parentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AnalyticsFragment">
+    tools:context=".Fragment_AnalyticsStrawberry">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -91,4 +91,5 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
 </FrameLayout>

@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_analytics -> {
-                    loadFragment(AnalyticsFragment())
+                    loadFragment(Fragment_AnalyticsStrawberry())
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_history -> {
