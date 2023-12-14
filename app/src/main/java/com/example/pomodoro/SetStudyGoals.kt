@@ -104,38 +104,29 @@ class SetStudyGoals : Fragment() {
     }
 
     private fun calculateAndSetTimeFinish(studyOn: String, studyOff: String, rounds: String) {
-        var message = "";
-        val studyOnMinutes = extractNumberFromString(studyOn)
-        println("Type of studyOnMinutes: ${studyOnMinutes::class.java}")
+        val studyOnSeconds = extractNumberFromString(studyOn)
         val studyOffMinutes = extractNumberFromString(studyOff)
-        println("This is studyoff minutes [$studyOffMinutes]")
         val roundsCount = extractNumberFromString(rounds)
-        println("This is round  [$roundsCount]")
-        println("This is roundCount  [${roundsCount::class.java}]")
 
+        // Calculate the total study time in seconds
+        val totalStudyTimeSeconds = (studyOnSeconds + studyOffMinutes * 60) * roundsCount
 
-        // Calculate the total study time in minutes
-        val totalStudyTime = (studyOnMinutes + studyOffMinutes) * roundsCount
-        println("This is total [$totalStudyTime]")
-        // finishing time
-        val endTime = Calendar.getInstance()
-        endTime.add(Calendar.MINUTE, totalStudyTime)
+        // Convert total study time to minutes and seconds
+        val totalStudyTimeMinutes = totalStudyTimeSeconds / 60
+        val remainingSeconds = totalStudyTimeSeconds % 60
 
-        // Format the time in 12-hour format
-        val timeFinishFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-        val timeFinish = timeFinishFormat.format(endTime.time)
-        println(timeFinish)
         // Display the message with the calculated time
-        message = getString(R.string.finish_message, timeFinish)
+        val message = getString(R.string.finish_message, "$totalStudyTimeMinutes minutes and $remainingSeconds seconds")
         timeFinishTextView.text = message
     }
 
     private fun extractNumberFromString(input: String): Int {
-        // Assuming the timeString is in the format "X minutes"
+        // Assuming the timeString is in the format "X minutes" or "X seconds"
         val regex = """^(\d+)""".toRegex()
         val matchResult = regex.find(input)
 
         return matchResult?.groupValues?.get(1)?.toIntOrNull() ?: 0
     }
+
 
 }
