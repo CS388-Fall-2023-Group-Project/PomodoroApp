@@ -22,6 +22,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class AnalyticsFragment : Fragment() {
+
     private lateinit var dbHelper: MainDatabase
     private var streak: Int =0
     override fun onCreateView(
@@ -123,90 +124,90 @@ i++
         val categoryMath= dbHelper.calculateTotalDurationBySubject("Computing")
         //1
         if ( categoryChemistry == 1) {
-            CategoryList.add(0,1F)
+            CategoryList[0]=1F
         }
         if ( categoryChemistry == 2) {
-            CategoryList.add(0,2F)
+            CategoryList[0]=2F
         }
         if ( categoryChemistry == 3) {
-            CategoryList.add(0,3F)
+            CategoryList[0]=3F
         }
         if ( categoryChemistry == 4) {
-            CategoryList.add(0,4F)
+            CategoryList[0]=4F
         }
         if ( categoryChemistry == 5) {
-            CategoryList.add(0,5F)
+            CategoryList[0]=5F
         }
         if ( categoryChemistry == 6) {
-            CategoryList.add(0,6F)
+            CategoryList[0]=6F
         }
-        if ( categoryChemistry == 7) {
-            CategoryList.add(0,7F)
+        if ( categoryChemistry >= 7) {
+            CategoryList[0]=7F
         }
         ///2
         if ( categoryCS== 1) {
-            CategoryList.add(1,1F)
+            CategoryList[1]=1F
         }
         if ( categoryCS == 2) {
-            CategoryList.add(1,2F)
+            CategoryList[1]=2F
         }
         if ( categoryCS == 3) {
-            CategoryList.add(1,3F)
+            CategoryList[1]=3F
         }
         if ( categoryCS == 4) {
-            CategoryList.add(1,4F)
+            CategoryList[1]=4F
         }
         if ( categoryCS == 5) {
-            CategoryList.add(1,5F)
+            CategoryList[1]=4F
         }
         if ( categoryCS == 6) {
-            CategoryList.add(1,6F)
+            CategoryList[1]=6F
         }
-        if ( categoryCS== 7) {
-            CategoryList.add(1,7F)
+        if ( categoryCS>= 7) {
+            CategoryList[1]=7F
         }
 ///3
         if ( categoryMath== 1) {
-            CategoryList.add(3,1F)
+            CategoryList[2]=1F
         }
         if ( categoryHistory == 2) {
-            CategoryList.add(3,2F)
+            CategoryList[2]=2F
         }
         if ( categoryHistory == 3) {
-            CategoryList.add(3,3F)
+            CategoryList[2]=3F
         }
         if ( categoryHistory == 4) {
-            CategoryList.add(3,4F)
+            CategoryList[2]=4F
         }
         if ( categoryHistory == 5) {
-            CategoryList.add(3,5F)
+            CategoryList[2]=5F
         }
         if ( categoryHistory == 6) {
-            CategoryList.add(3,6F)
+            CategoryList[2]=6F
         }
-        if (categoryHistory== 7) {
-            CategoryList.add(3,7F)
+        if (categoryHistory>= 7) {
+            CategoryList[2]=7F
         }
-        if ( categoryHistory== 1) {
-            CategoryList.add(3,1F)
+        if ( categoryMath== 1) {
+            CategoryList[3]=1F
         }
-        if ( categoryHistory == 2) {
-            CategoryList.add(3,2F)
+        if ( categoryMath == 2) {
+            CategoryList[3]=2F
         }
-        if ( categoryHistory == 3) {
-            CategoryList.add(3,3F)
+        if ( categoryMath == 3) {
+            CategoryList[3]=3F
         }
-        if ( categoryHistory == 4) {
-            CategoryList.add(3,4F)
+        if ( categoryMath == 4) {
+            CategoryList[3]=4F
         }
-        if ( categoryHistory == 5) {
-            CategoryList.add(3,5F)
+        if ( categoryMath == 5) {
+            CategoryList[3]=5F
         }
-        if ( categoryHistory == 6) {
-            CategoryList.add(3,6F)
+        if ( categoryMath == 6) {
+            CategoryList[3]=6F
         }
-        if (categoryHistory== 7) {
-            CategoryList.add(3,7F)
+        if (categoryMath>= 7) {
+            CategoryList[3]=7F
         }
 
 
@@ -251,9 +252,9 @@ i++
 
         barPercentChartWhitening.apply {
             tooltip = pointTooltip
-            currentAverage = 20
-            average = 50
-            previousAverage = 30
+            currentAverage = 30
+            average = 40
+            previousAverage = 10
             createBarPercent()
             disableTouchAndClick()
         }

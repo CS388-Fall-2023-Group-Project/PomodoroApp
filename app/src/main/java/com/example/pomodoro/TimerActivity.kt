@@ -170,7 +170,6 @@ class TimerActivity : AppCompatActivity() {
         okButton.setOnClickListener {
             welcomeBackDialog.dismiss()
         }
-
     }
 
 
