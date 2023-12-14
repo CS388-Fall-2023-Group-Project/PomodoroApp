@@ -17,7 +17,6 @@
             android:fontFamily="@font/inter"
             android:gravity="start"
             android:textStyle="bold"
-            android:layout_marginTop="5dp"
             android:layout_marginStart="8dp"
             android:layout_alignParentStart="true" />
 
@@ -163,7 +162,7 @@
             android:id="@+id/textViewWhatFinishTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="You will finish all rounds by..."
+            android:text="Calculate finish time"
             android:fontFamily="@font/inter"
             android:textStyle="bold"
             android:textSize="16sp"
@@ -214,7 +213,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/FinishTimeBox"
-            android:text="START STUDYING"
+            android:text="START STUDYING 🚀"
             android:fontFamily="@font/inter"
             android:textColor="#FFFFFF"
             android:background="@drawable/green_button_background"

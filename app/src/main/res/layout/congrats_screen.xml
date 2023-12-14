@@ -22,12 +22,12 @@
 
     <TextView
         android:id="@+id/congratsMessage"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:text="You completed an entire study session"
+        android:text="You conquered a full study session with flying colors! 🚀 Keep up the fantastic work!"
         android:gravity="center"
         android:layout_below="@id/congratsText"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="150dp"
         android:fontFamily="@font/inter"
         android:textSize="16sp"
         android:textColor="@android:color/black"
@@ -45,6 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:background="@drawable/box_background"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
