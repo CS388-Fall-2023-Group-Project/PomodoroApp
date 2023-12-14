@@ -1,6 +1,7 @@
 package com.example.pomodoro
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,19 +23,18 @@ import java.time.format.DateTimeFormatter
 
 class AnalyticsFragment : Fragment() {
     private lateinit var dbHelper: MainDatabase
+    private var streak: Int =0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        val view =   inflater.inflate(R.layout.fragment_analytics, container, false)
+        val view = inflater.inflate(R.layout.fragment_analytics, container, false)
 
         // Assume you have a TextView with the ID "textView" in your fragment layout
-        val textView = view.findViewById<TextView>(R.id.t2)
-        if (streak!= 0 ) {
-            // Change the text of the TextView
-            textView.text = "You Have a"+ "Streak"
-        }
+
+
+
         return view
 
         // Inflate the layout for this fragment
@@ -43,7 +43,7 @@ class AnalyticsFragment : Fragment() {
 
 
     }
-    val streak=0
+
     val timeList2 = mutableListOf<Float>()
     val timeList = mutableListOf<Int>()
     val CategoryList= mutableListOf(0F,0F,0F,0F)
@@ -51,6 +51,11 @@ class AnalyticsFragment : Fragment() {
     val Past7days= mutableListOf<String>()
     // this is a comment to teach about git
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        dbHelper = MainDatabase(requireContext())
+         streak = dbHelper.calculateStudyStreak()
+        updateStreak()
+
         // Get the current date
         val currentDate = LocalDate.now()
 
@@ -65,80 +70,79 @@ class AnalyticsFragment : Fragment() {
 
         // Print the list of past dates
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+       var  i=0
         pastDates.forEach {
             Past7days.add(it.format(formatter))
-            val day7Stats = dbHelper.calculateTotalDurationForDate(it.format(formatter))
-
+           val current = it.format(formatter)
+            val day7Stats = dbHelper.calculateTotalDurationForDate(current)
+            Log.d("Nate","Date; $current; Hours;$day7Stats")
             if ( day7Stats == 0) {
-                WeekList.add(0,0F)
-                WeekList.removeAt(6)
+                WeekList[i]=0F
+
             }
 
 
             if ( day7Stats == 1) {
-                WeekList.add(0,1F)
-                WeekList.removeAt(6)
+                WeekList[i]=1F
+
             }
             if ( day7Stats == 2) {
-                WeekList.add(0,2F)
-                WeekList.removeAt(6)
+                WeekList[i]=2F
+
             }
             if ( day7Stats == 3) {
-                WeekList.add(0,3F)
-                WeekList.removeAt(6)
+                WeekList[i]=3F
+
             }
             if ( day7Stats == 4) {
-                WeekList.add(0,4F)
-                WeekList.removeAt(6)
+                WeekList[i]=4F
             }
             if ( day7Stats== 5) {
-                WeekList.add(0,5F)
-                WeekList.removeAt(6)
+                WeekList[i]=5F
+
             }
             if ( day7Stats == 6) {
-                WeekList.add(0,6F)
-                WeekList.removeAt(6)
+                WeekList[i]=6F
+
             }
-            if ( day7Stats == 7) {
-                WeekList.add(0,7F)
-                WeekList.removeAt(6)
+            if ( day7Stats >=7) {
+                WeekList[i]=7F
             }
 
-
+i++
 
         }
 
 
-        super.onViewCreated(view, savedInstanceState)
-        dbHelper = MainDatabase(requireContext())
+
 
         val categoryChemistry= dbHelper.calculateTotalDurationBySubject("Chemistry")
 
         val categoryCS= dbHelper.calculateTotalDurationBySubject("Computing")
         val categoryHistory= dbHelper.calculateTotalDurationBySubject("History")
-        // val categoryMath= dbHelper.calculateTotalDurationBySubject("Computing")
-   //1
-                if ( categoryChemistry == 1) {
-                    CategoryList.add(0,1F)
-                }
-                if ( categoryChemistry == 2) {
-                    CategoryList.add(0,2F)
-                }
-                if ( categoryChemistry == 3) {
-                    CategoryList.add(0,3F)
-                }
-                if ( categoryChemistry == 4) {
-                    CategoryList.add(0,4F)
-                }
-                if ( categoryChemistry == 5) {
-                    CategoryList.add(0,5F)
-                }
-                if ( categoryChemistry == 6) {
-                    CategoryList.add(0,6F)
-                }
-                if ( categoryChemistry == 7) {
-                    CategoryList.add(0,7F)
-                }
+        val categoryMath= dbHelper.calculateTotalDurationBySubject("Computing")
+        //1
+        if ( categoryChemistry == 1) {
+            CategoryList.add(0,1F)
+        }
+        if ( categoryChemistry == 2) {
+            CategoryList.add(0,2F)
+        }
+        if ( categoryChemistry == 3) {
+            CategoryList.add(0,3F)
+        }
+        if ( categoryChemistry == 4) {
+            CategoryList.add(0,4F)
+        }
+        if ( categoryChemistry == 5) {
+            CategoryList.add(0,5F)
+        }
+        if ( categoryChemistry == 6) {
+            CategoryList.add(0,6F)
+        }
+        if ( categoryChemistry == 7) {
+            CategoryList.add(0,7F)
+        }
         ///2
         if ( categoryCS== 1) {
             CategoryList.add(1,1F)
@@ -162,9 +166,9 @@ class AnalyticsFragment : Fragment() {
             CategoryList.add(1,7F)
         }
 ///3
-//        if ( categoryMath== 1) {
-//            CategoryList.add(3,1F)
-//        }
+        if ( categoryMath== 1) {
+            CategoryList.add(3,1F)
+        }
         if ( categoryHistory == 2) {
             CategoryList.add(3,2F)
         }
@@ -210,6 +214,12 @@ class AnalyticsFragment : Fragment() {
         setupBarChart(view)
         setupBarPercentChart(view)
     }
+
+    private fun updateStreak() {
+        val textViewStreak: TextView = requireView().findViewById(R.id.t2)
+            textViewStreak.text = "🔥🔥 Your on a $streak Study Streak!!! 🔥🔥"
+        }
+
 
     // Comment
     private fun setupHorizontalChart(view: View) {
