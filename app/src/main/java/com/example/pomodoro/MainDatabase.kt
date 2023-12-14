@@ -177,6 +177,8 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         // Filter tasks with duration >= 1
         val validTasks = tasksForLast7Days.filter { it.duration!! >= 1 }
 
+
+        
         // Extract unique dates from valid tasks
         val uniqueDates = validTasks.map { it.date }.toSet()
 

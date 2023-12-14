@@ -8,27 +8,11 @@
     android:orientation="vertical"
     tools:context=".Strats">
 
-    <com.straiberry.android.charts.view.HorizontalBarChartView
-        android:id="@+id/horizontalBarChartViewBrushingDigit"
-        android:layout_width="match_parent"
-        android:layout_height="236dp"
-        android:layout_marginBottom="10dp"
-        android:clickable="false"
-        android:focusable="false"
-
-        app:chart_barsRadius="17dp"
-        app:chart_grid="full"
-        app:chart_horizontal_y_label_type="fromZeroToSeven"
-        app:chart_labelsSize="8sp"
-        app:chart_spacing="13dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="76dp"
-        android:text="🔥🔥 Your on a 10 Study Streak!!! 🔥🔥"
+        android:text="You Don't Have a Streak 😭"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
