@@ -217,4 +217,13 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         return totalDuration
     }
 
+    fun calculateTotalDurationForDate(date: String): Int {
+        val tasksForDate = getTasksForDate(date)
+
+        // Calculate the total duration for the specified date
+        val totalDuration = tasksForDate.sumBy { it.duration ?: 0 }
+
+        return totalDuration
+    }
+
 }
