@@ -21,5 +21,6 @@
         android:padding="16dp"
         android:background="#ede9e8"
         android:clipToPadding="false"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:overScrollMode="never" />
 </FrameLayout>
