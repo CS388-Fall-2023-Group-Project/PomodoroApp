@@ -1,5 +1,6 @@
 package com.example.pomodoro
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -33,6 +34,10 @@ class Fragment_History : Fragment() {
 
         dbHelper = MainDatabase(requireContext())
         historyRecyclerView = view.findViewById(R.id.historyRecyclerView)
+        // Set item decoration to add space between items
+        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing_between_items)
+        historyRecyclerView.addItemDecoration(SpacesItemDecoration(spacingInPixels))
+
 
         // RecyclerView setup
         historyAdapter = Adapter_HistoryRecyclerView()
@@ -60,6 +65,29 @@ class Fragment_History : Fragment() {
         }
     }
 
+    // ItemDecoration class to add space between items
+    private class SpacesItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            outRect.left = space
+            outRect.right = space
+            outRect.bottom = space
+
+            // Add top margin only for the first item to avoid double space between items
+            if (parent.getChildAdapterPosition(view) == 0) {
+                outRect.top = space
+            } else {
+                outRect.top = 0
+            }
+        }
+    }
+
+    }
+
     private fun formatDate(year: Int, month: Int, dayOfMonth: Int): String {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.YEAR, year)
@@ -70,5 +98,5 @@ class Fragment_History : Fragment() {
     }
 
 
-}
+
 

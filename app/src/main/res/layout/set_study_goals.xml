@@ -32,6 +32,7 @@
             android:background="@drawable/edittext_outline"
             android:hint="ex: Revise Chapter 2"
             android:fontFamily="@font/inter"
+            android:textSize="16sp"
             android:paddingStart="16dp"
             />
 
