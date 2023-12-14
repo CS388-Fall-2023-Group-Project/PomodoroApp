@@ -42,10 +42,12 @@ class TimerActivity : AppCompatActivity() {
     private var roundNumber =1
 
 
-    private var isTimerFinished = false
-    // making a a unique notif based on what time it is
+
     private val NOTIFICATION_ID = System.currentTimeMillis().toInt()
     private val CHANNEL_ID = "timer_channel"
+    private var isGoingToCongratsActivity = false
+    private var isTimerFinished = false
+
 
 
     private val mainDatabase: MainDatabase by lazy {
@@ -103,13 +105,28 @@ class TimerActivity : AppCompatActivity() {
             },
             onFinish = {
                 // Timer finished, handle it as needed
-                val gotoBreak= Intent(this@TimerActivity,BreakActivity::class.java)
+                val gotoBreak = Intent(this@TimerActivity, BreakActivity::class.java)
                 gotoBreak.putExtra("selectedStudyOff", selectedStudyOff)
                 startActivity(gotoBreak)
                 roundNumber++
-                isTimerFinished = true
 
+                // Check if the number of rounds has been reached
+                if (roundNumber > intentSelectedRounds) {
+                    countdownTimer.cancel()
+                    roundNumber--
+
+                    // Call congrats screen
+                    val congratsIntent = Intent(this@TimerActivity, CongratsActivity::class.java)
+                    isGoingToCongratsActivity = true
+                    startActivity(congratsIntent)
+                    finish()
+                } else {
+                    // If more rounds are remaining, reset the timer for the next round
+                    isTimerFinished = true
+                    restartTimer()
+                }
             }
+
 
         )
 
@@ -143,8 +160,6 @@ class TimerActivity : AppCompatActivity() {
             val congratsIntent = Intent(this@TimerActivity, CongratsActivity::class.java)
 
             startActivity(congratsIntent)
-
-
         }
 
         // Initialize the welcome back dialog
@@ -155,9 +170,6 @@ class TimerActivity : AppCompatActivity() {
         okButton.setOnClickListener {
             welcomeBackDialog.dismiss()
         }
-
-
-
 
     }
 
@@ -254,8 +266,7 @@ class TimerActivity : AppCompatActivity() {
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        // User swiped out of the app, show notification
-        if (!isTimerFinished) {
+        if (!isTimerFinished && !isGoingToCongratsActivity) {
             showSwipeAwayNotification()
             restartTimer()
         }
