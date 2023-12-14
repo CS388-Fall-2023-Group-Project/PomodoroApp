@@ -10,6 +10,9 @@ import android.widget.CalendarView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 
 class Fragment_History : Fragment() {
@@ -39,14 +42,31 @@ class Fragment_History : Fragment() {
         // DATE CLICKS
         val calendarView: CalendarView = view.findViewById(R.id.calendarView)
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            val formattedDate = "$year-${month + 1}-$dayOfMonth"
+            val formattedDate = formatDate(year, month + 1, dayOfMonth)
             // Retrieve tasks for the selected date from the database
             val taskInfo = dbHelper.getTasksForDate(formattedDate)
-            Log.d("MainDatabase", "Fragment_History getTasksForDate: $formattedDate")
-            Log.d("MainDatabase", "Fragment_History getTasksForDate TASK DETAILS: $taskInfo")
+
+            // Log.d("MainDatabase", "Fragment_History getTasksForDate: $formattedDate")
+            // Log.d("MainDatabase", "Fragment_History getTasksForDate TASK DETAILS: $taskInfo")
+            // val taskInfo7 = dbHelper.getTasksForLast7Days()
+            // Log.d("MainDatabase", "Fragment_History getTasksForLast7Days: $taskInfo7")
+            // val streak = dbHelper.calculateStudyStreak()
+            // Log.d("MainDatabase", "Streak: $streak")
+
+            // val duration = dbHelper.calculateTotalDurationBySubject(subject="Math")
+            // Log.d("MainDatabase", "duration: $duration")
             historyAdapter.updateData(taskInfo)
 
         }
+    }
+
+    private fun formatDate(year: Int, month: Int, dayOfMonth: Int): String {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month - 1)
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(calendar.time)
     }
 
 

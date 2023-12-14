@@ -72,8 +72,8 @@ if (streak!= 0 ) {
 
         super.onViewCreated(view, savedInstanceState)
         dbHelper = MainDatabase(requireContext())
-        val day7Stats = dbHelper.getTasksForLast7Days("2023-12-7")
-        val categoryInfo= dbHelper.getTotalDurationByCategoryLast7Days("2023-12-7")
+        val day7Stats = dbHelper.getTasksForLast7Days()
+        val categoryInfo= dbHelper.calculateTotalDurationBySubject("2023-12-7")
        for( task in day7Stats){
            val taskID = task.id
 

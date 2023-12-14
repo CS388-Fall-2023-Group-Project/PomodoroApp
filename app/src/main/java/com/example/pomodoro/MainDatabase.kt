@@ -6,21 +6,24 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import java.util.Random
+import java.util.concurrent.TimeUnit
+import kotlin.math.max
 
 class MainDatabase (context: Context): SQLiteOpenHelper(context,
     MainDatabase.DATABASE_NAME, null,
     MainDatabase.DATABASE_VERSION
-){
+) {
     companion object {
         private const val DATABASE_VERSION = 1
         private const val DATABASE_NAME = "database.db"
 
         const val TABLE_TASK_DETAILS = "tbl_TaskDetails"
-        const val TABLE_TASK_7DAYS = "tbl_Task7Days"
         const val COLUMN_ID = "Id"
-        const val COLUMN_WEEK_NUMBER = "WeekNumber"
-        const val COLUMN_WEEK_MONDAY = "WeekMonday"
         const val COLUMN_DATE = "Date"
         const val COLUMN_TASK_NAME = "TaskName"
         const val COLUMN_SUBJECT = "Subject"
@@ -30,16 +33,13 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         const val COLUMN_CURRENT_TIME_END = "TimeEnd"
         const val COLUMN_TIME_RANGE = "TimeRange"
         const val COLUMN_DURATION = "Duration"
-        const val COLUMN_TOTAL_DURATION = "TotalDuration"
         const val COLUMN_ROUNDS = "Rounds"
-        const val DEFAULT_ROW_ID = 1
     }
+
     override fun onCreate(db: SQLiteDatabase?) {
         val createTableTaskDetails = """
             CREATE TABLE $TABLE_TASK_DETAILS (
                 $COLUMN_ID INTEGER PRIMARY KEY,
-                $COLUMN_WEEK_NUMBER INT,
-                $COLUMN_WEEK_MONDAY STRING,
                 $COLUMN_DATE STRING,
                 $COLUMN_TASK_NAME STRING,
                 $COLUMN_SUBJECT STRING,
@@ -49,61 +49,10 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
                 $COLUMN_CURRENT_TIME_END STRING,
                 $COLUMN_TIME_RANGE STRING,
                 $COLUMN_DURATION INT,
-                $COLUMN_ROUNDS STRING
+                $COLUMN_ROUNDS INT
             )
         """.trimIndent()
-
         db?.execSQL(createTableTaskDetails)
-
-        // Insert a default row with the specified ID
-        if (db != null) {
-            insertDefaultRow(db)
-        }
-
-        // Table to store tasks in the past 7 days
-        val createTableTask7Days = """
-            CREATE TABLE $TABLE_TASK_7DAYS (
-                $COLUMN_ID INTEGER PRIMARY KEY,
-                $COLUMN_DATE STRING,
-                $COLUMN_TASK_NAME STRING,
-                $COLUMN_SUBJECT STRING,
-                $COLUMN_STUDY_ON STRING,
-                $COLUMN_STUDY_OFF STRING,
-                $COLUMN_CURRENT_TIME_START STRING,
-                $COLUMN_CURRENT_TIME_END STRING,
-                $COLUMN_TIME_RANGE STRING,
-                $COLUMN_DURATION INT,                
-                $COLUMN_TOTAL_DURATION INT,
-                $COLUMN_ROUNDS STRING
-            )
-        """.trimIndent()
-
-        db?.execSQL(createTableTask7Days)
-    }
-
-    private fun insertDefaultRow(db: SQLiteDatabase) {
-        val contentValues = ContentValues().apply {
-            put(COLUMN_ID, DEFAULT_ROW_ID)
-            put(COLUMN_WEEK_NUMBER, "46")
-            put(COLUMN_WEEK_MONDAY, "2023-11-13")
-            put(COLUMN_TASK_NAME, "Revise for exam")
-            put(COLUMN_SUBJECT, "Math")
-            put(COLUMN_STUDY_ON, "1")
-            put(COLUMN_STUDY_OFF, "1")
-            put(COLUMN_CURRENT_TIME_START,"9:00 AM")
-            put(COLUMN_CURRENT_TIME_END,"11:00 AM")
-            put(COLUMN_TIME_RANGE, "10:00 AM - 11:00 AM")
-            put(COLUMN_DATE, "2023-11-13")
-            put(COLUMN_DURATION, 2)
-            put(COLUMN_ROUNDS, "1")
-        }
-
-        db.insertWithOnConflict(
-            TABLE_TASK_DETAILS,
-            null,
-            contentValues,
-            SQLiteDatabase.CONFLICT_REPLACE
-        )
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -111,19 +60,17 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
         onCreate(db)
     }
 
-    fun insertStudySession(
-        weekNumber: Int,
-        weekMonday: String,
+    fun insertTableTaskDetails(
         date: String,
         taskName: String,
         subject: String,
         studyOn: String,
         studyOff: String,
         currentTimeStart: String,
-        currentTimeEnd:String,
+        currentTimeEnd: String,
         timeRange: String,
         duration: Int,
-        rounds: String,
+        rounds: Int,
     ) {
         val values = ContentValues().apply {
             put(COLUMN_DATE, date)
@@ -137,28 +84,17 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
             put(COLUMN_DURATION, duration)
             put(COLUMN_ROUNDS, rounds)
         }
-        Log.d("MainDatabase", "MainDatabase inserted weekNumber as: $weekNumber")
-        Log.d("MainDatabase", "MainDatabase inserted weekMonday as: $weekMonday")
         writableDatabase.insert(TABLE_TASK_DETAILS, null, values)
-        writableDatabase.insert(TABLE_TASK_7DAYS, null, values)
     }
 
-    fun deleteOutdatedTasks(sevenDaysFromDate: String) {
-        val db = writableDatabase
-        try {
-            db.delete(TABLE_TASK_7DAYS, "$COLUMN_DATE < ?", arrayOf(sevenDaysFromDate))
-        } catch (e: Exception) {
-            Log.e("MainDatabase", "Error deleting outdated tasks", e)
-        } finally {
-            db.close()
-        }
-    }
+
     @SuppressLint("Range")
     fun getTasksForDate(date: String): List<TaskInfo> {
         val tasks = mutableListOf<TaskInfo>()
         val db = readableDatabase
 
-        val query = "SELECT * FROM ${MainDatabase.TABLE_TASK_DETAILS} WHERE ${MainDatabase.COLUMN_DATE} = ?"
+        val query =
+            "SELECT * FROM ${MainDatabase.TABLE_TASK_DETAILS} WHERE ${MainDatabase.COLUMN_DATE} = ?"
 
         try {
             val cursor = db.rawQuery(query, arrayOf(date))
@@ -166,101 +102,122 @@ class MainDatabase (context: Context): SQLiteOpenHelper(context,
             cursor.use {
                 while (it.moveToNext()) {
                     val taskID = it.getInt(it.getColumnIndex(MainDatabase.COLUMN_ID))
+                    val date = it.getString(it.getColumnIndex(MainDatabase.COLUMN_DATE))
                     val taskName = it.getString(it.getColumnIndex(MainDatabase.COLUMN_TASK_NAME))
                     val taskCategory = it.getString(it.getColumnIndex(MainDatabase.COLUMN_SUBJECT))
                     val timeRange = it.getString(it.getColumnIndex(MainDatabase.COLUMN_TIME_RANGE))
                     val duration = it.getInt(it.getColumnIndex(MainDatabase.COLUMN_DURATION))
 
-                    val task = TaskInfo(taskID, taskName, taskCategory, timeRange, duration)
+                    val task = TaskInfo(taskID, date, taskName, taskCategory, timeRange, duration)
                     tasks.add(task)
                 }
             }
         } catch (e: Exception) {
-            Log.e("MainDatabase", "Error fetching tasks for date: $date", e)
+            Log.e("MainDatabase", "Error fetching tasks for date getTasksForDate(): $date", e)
         } finally {
             db.close()
         }
 
         return tasks
     }
+
     @SuppressLint("Range")
-    fun getTasksForLast7Days(fromDate: String): List<TaskInfo7Days> {
-        val tasks = mutableListOf<TaskInfo7Days>()
+    fun getTasksForLast7Days(): List<TaskInfo> {
+        val tasks = mutableListOf<TaskInfo>()
         val db = readableDatabase
 
-        val query = "SELECT * FROM ${MainDatabase.TABLE_TASK_7DAYS} WHERE ${MainDatabase.COLUMN_DATE} >= ?"
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val currentDate = dateFormat.format(Date())
+
+        // Calculate the date 7 days ago
+        val calendar = Calendar.getInstance()
+        calendar.time = dateFormat.parse(currentDate)!!
+        calendar.add(Calendar.DAY_OF_YEAR, -7)
+        val sevenDaysAgoDate = dateFormat.format(calendar.time)
+
+        val query = """
+        SELECT * FROM ${MainDatabase.TABLE_TASK_DETAILS}
+        WHERE ${MainDatabase.COLUMN_DATE} BETWEEN date(?) AND date(?)
+    """.trimIndent()
 
         try {
-            val cursor = db.rawQuery(query, arrayOf(fromDate))
+            val cursor = db.rawQuery(query, arrayOf(sevenDaysAgoDate, currentDate))
 
             cursor.use {
                 while (it.moveToNext()) {
                     val taskID = it.getInt(it.getColumnIndex(MainDatabase.COLUMN_ID))
+                    val date = it.getString(it.getColumnIndex(MainDatabase.COLUMN_DATE))
                     val taskName = it.getString(it.getColumnIndex(MainDatabase.COLUMN_TASK_NAME))
                     val taskCategory = it.getString(it.getColumnIndex(MainDatabase.COLUMN_SUBJECT))
                     val timeRange = it.getString(it.getColumnIndex(MainDatabase.COLUMN_TIME_RANGE))
                     val duration = it.getInt(it.getColumnIndex(MainDatabase.COLUMN_DURATION))
-                    val totalDuration = it.getInt(it.getColumnIndex(MainDatabase.COLUMN_TOTAL_DURATION))
 
-                    val task = TaskInfo7Days(taskID, taskName, taskCategory, timeRange, duration,totalDuration)
+                    val task = TaskInfo(taskID, date, taskName, taskCategory, timeRange, duration)
                     tasks.add(task)
                 }
             }
         } catch (e: Exception) {
-            Log.e("MainDatabase", "Error fetching tasks for the last 7 days from $fromDate", e)
+            Log.e("MainDatabase", "Error fetching tasks for the last 7 days", e)
         } finally {
             db.close()
         }
+
+        tasks.sortByDescending { it.date }
 
         return tasks
     }
-    @SuppressLint("Range")
-    fun getTotalDurationByCategoryLast7Days(fromDate: String): Map<String, Int> {
-        val totalDurations = mutableMapOf<String, Int>()
-        val db = readableDatabase
 
-        val query =
-            """
-        SELECT $COLUMN_SUBJECT, SUM($COLUMN_DURATION) as total_duration
-        FROM $TABLE_TASK_7DAYS
-        WHERE $COLUMN_DATE >= ?
-        GROUP BY $COLUMN_SUBJECT
-        """.trimIndent()
+    fun calculateStudyStreak(): Int {
+        val tasksForLast7Days = getTasksForLast7Days()
+        if (tasksForLast7Days.isEmpty()) {
+            return 0 // No tasks in the last 7 days, streak is 0.
+        }
 
-        try {
-            val cursor = db.rawQuery(query, arrayOf(fromDate))
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        // Filter tasks with duration >= 1
+        val validTasks = tasksForLast7Days.filter { it.duration!! >= 1 }
 
-            cursor.use {
-                while (it.moveToNext()) {
-                    val category = it.getString(it.getColumnIndex(MainDatabase.COLUMN_SUBJECT))
-                    val totalDuration = it.getInt(it.getColumnIndex(COLUMN_TOTAL_DURATION))
-                    totalDurations[category] = totalDuration
+
+
+            // Extract unique dates from valid tasks
+            val uniqueDates = validTasks.map { it.date }.toSet()
+
+            // Sort unique dates in descending order
+            val sortedDates = uniqueDates.sortedByDescending { dateFormat.parse(it) }
+
+            Log.d("MainDatabase", "Soted Unique Dates: $sortedDates")
+
+            val currentDate = dateFormat.parse(tasksForLast7Days[0].date)!!
+
+            var streak = 1 // At least one task in the last 7 days, so streak starts at 1.
+            for (i in 1 until sortedDates.size) {
+                val currentDate = dateFormat.parse(sortedDates[i - 1])!!
+                val currentDateTask = dateFormat.parse(sortedDates[i])!!
+
+                val difference = currentDate.time - currentDateTask.time
+                val daysDifference = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS)
+
+                if (daysDifference == 1L && currentDate.after(currentDateTask)) {
+                    streak++
+                } else {
+                    break // Break the loop if there is a gap in consecutive days.
+
                 }
             }
-        } catch (e: Exception) {
-            Log.e("MainDatabase", "Error calculating total duration by category", e)
-        } finally {
-            db.close()
+
+            return streak
         }
 
-        return totalDurations
-    }
+        fun calculateTotalDurationBySubject(subject: String): Int {
+            val tasksForLast7Days = getTasksForLast7Days()
 
+            // Filter tasks for the specified subject
+            val tasksForSubject = tasksForLast7Days.filter { it.subject == subject }
 
-}
+            // Calculate the total duration for the specified subject
+            val totalDuration = tasksForSubject.sumBy { it.duration ?: 0 }
 
-data class TaskInfo7Days (
-    var id: Int = 1,
-    var task: String = "",
-    var subject: String = "",
-    var timerange: String = "",
-    var duration: Int? = null,
-    var totalDuration: Int? = null
-){
-    companion object{
-        fun getAutoId(): Int{
-            val random = Random()
-            return random.nextInt(100)
+            return totalDuration
         }
+
     }
-}
