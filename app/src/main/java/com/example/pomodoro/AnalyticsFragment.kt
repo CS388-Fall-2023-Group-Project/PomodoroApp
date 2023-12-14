@@ -1,6 +1,7 @@
 package com.example.pomodoro
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,19 +23,18 @@ import java.time.format.DateTimeFormatter
 
 class AnalyticsFragment : Fragment() {
     private lateinit var dbHelper: MainDatabase
+    private var streak: Int =0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        val view =   inflater.inflate(R.layout.fragment_analytics, container, false)
+        val view = inflater.inflate(R.layout.fragment_analytics, container, false)
 
         // Assume you have a TextView with the ID "textView" in your fragment layout
-        val textView = view.findViewById<TextView>(R.id.t2)
-if (streak!= 0 ) {
-    // Change the text of the TextView
-    textView.text = "You Have a"+ "Streak"
-}
+
+
+
         return view
 
         // Inflate the layout for this fragment
@@ -43,7 +43,7 @@ if (streak!= 0 ) {
 
 
     }
-    val streak=0
+
     val timeList2 = mutableListOf<Float>()
     val timeList = mutableListOf<Int>()
     val CategoryList= mutableListOf(0F,0F,0F,0F)
@@ -51,6 +51,11 @@ if (streak!= 0 ) {
     val Past7days= mutableListOf<String>()
     // this is a comment to teach about git
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        dbHelper = MainDatabase(requireContext())
+         streak = dbHelper.calculateStudyStreak()
+        updateStreak()
+
         // Get the current date
         val currentDate = LocalDate.now()
 
@@ -65,109 +70,156 @@ if (streak!= 0 ) {
 
         // Print the list of past dates
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+       var  i=0
         pastDates.forEach {
             Past7days.add(it.format(formatter))
+           val current = it.format(formatter)
+            val day7Stats = dbHelper.calculateTotalDurationForDate(current)
+            Log.d("Nate","Date; $current; Hours;$day7Stats")
+            if ( day7Stats == 0) {
+                WeekList[i]=0F
+
+            }
+
+
+            if ( day7Stats == 1) {
+                WeekList[i]=1F
+
+            }
+            if ( day7Stats == 2) {
+                WeekList[i]=2F
+
+            }
+            if ( day7Stats == 3) {
+                WeekList[i]=3F
+
+            }
+            if ( day7Stats == 4) {
+                WeekList[i]=4F
+            }
+            if ( day7Stats== 5) {
+                WeekList[i]=5F
+
+            }
+            if ( day7Stats == 6) {
+                WeekList[i]=6F
+
+            }
+            if ( day7Stats >=7) {
+                WeekList[i]=7F
+            }
+
+i++
+
+        }
+
+
+
+
+        val categoryChemistry= dbHelper.calculateTotalDurationBySubject("Chemistry")
+
+        val categoryCS= dbHelper.calculateTotalDurationBySubject("Computing")
+        val categoryHistory= dbHelper.calculateTotalDurationBySubject("History")
+        val categoryMath= dbHelper.calculateTotalDurationBySubject("Computing")
+        //1
+        if ( categoryChemistry == 1) {
+            CategoryList.add(0,1F)
+        }
+        if ( categoryChemistry == 2) {
+            CategoryList.add(0,2F)
+        }
+        if ( categoryChemistry == 3) {
+            CategoryList.add(0,3F)
+        }
+        if ( categoryChemistry == 4) {
+            CategoryList.add(0,4F)
+        }
+        if ( categoryChemistry == 5) {
+            CategoryList.add(0,5F)
+        }
+        if ( categoryChemistry == 6) {
+            CategoryList.add(0,6F)
+        }
+        if ( categoryChemistry == 7) {
+            CategoryList.add(0,7F)
+        }
+        ///2
+        if ( categoryCS== 1) {
+            CategoryList.add(1,1F)
+        }
+        if ( categoryCS == 2) {
+            CategoryList.add(1,2F)
+        }
+        if ( categoryCS == 3) {
+            CategoryList.add(1,3F)
+        }
+        if ( categoryCS == 4) {
+            CategoryList.add(1,4F)
+        }
+        if ( categoryCS == 5) {
+            CategoryList.add(1,5F)
+        }
+        if ( categoryCS == 6) {
+            CategoryList.add(1,6F)
+        }
+        if ( categoryCS== 7) {
+            CategoryList.add(1,7F)
+        }
+///3
+        if ( categoryMath== 1) {
+            CategoryList.add(3,1F)
+        }
+        if ( categoryHistory == 2) {
+            CategoryList.add(3,2F)
+        }
+        if ( categoryHistory == 3) {
+            CategoryList.add(3,3F)
+        }
+        if ( categoryHistory == 4) {
+            CategoryList.add(3,4F)
+        }
+        if ( categoryHistory == 5) {
+            CategoryList.add(3,5F)
+        }
+        if ( categoryHistory == 6) {
+            CategoryList.add(3,6F)
+        }
+        if (categoryHistory== 7) {
+            CategoryList.add(3,7F)
+        }
+        if ( categoryHistory== 1) {
+            CategoryList.add(3,1F)
+        }
+        if ( categoryHistory == 2) {
+            CategoryList.add(3,2F)
+        }
+        if ( categoryHistory == 3) {
+            CategoryList.add(3,3F)
+        }
+        if ( categoryHistory == 4) {
+            CategoryList.add(3,4F)
+        }
+        if ( categoryHistory == 5) {
+            CategoryList.add(3,5F)
+        }
+        if ( categoryHistory == 6) {
+            CategoryList.add(3,6F)
+        }
+        if (categoryHistory== 7) {
+            CategoryList.add(3,7F)
         }
 
 
-        super.onViewCreated(view, savedInstanceState)
-        dbHelper = MainDatabase(requireContext())
-        val day7Stats = dbHelper.getTasksForLast7Days()
-        val categoryInfo= dbHelper.calculateTotalDurationBySubject("2023-12-7")
-       for( task in day7Stats){
-           val taskID = task.id
-
-           val name = task.task
-           val totalTime= task.totalDuration
-           if (totalTime != null) {
-               timeList.add(totalTime)
-           }
-       }
-        for(task in categoryInfo){
-
-           val category = task.key
-            val total7Time= task.value
-
-            timeList2.add(total7Time.toFloat())
-        }
-
-        for(list in timeList){
-        if ( list.toInt() == 0) {
-            WeekList.add(0,0F)
-            WeekList.removeAt(6)
-        }
-            if ( list.toDouble() == 0.25) {
-                WeekList.add(0,0.25F)
-                WeekList.removeAt(6)
-            }
-            if ( list.toDouble() == 0.5) {
-                WeekList.add(0,0.5F)
-                WeekList.removeAt(6)
-            }
-            if ( list.toInt() == 1) {
-                WeekList.add(0,1F)
-                WeekList.removeAt(6)
-            }
-            if ( list.toInt() == 2) {
-                WeekList.add(0,2F)
-                WeekList.removeAt(6)
-            }
-            if ( list.toInt() == 3) {
-                WeekList.add(0,3F)
-                WeekList.removeAt(6)
-            }
-            if ( list.toInt() == 4) {
-                WeekList.add(0,4F)
-                WeekList.removeAt(6)
-            }
-            if ( list.toInt() == 5) {
-                WeekList.add(0,5F)
-                WeekList.removeAt(6)
-            }
-            if ( list.toInt() == 6) {
-                WeekList.add(0,6F)
-                WeekList.removeAt(6)
-            }
-            if ( list.toInt() == 7) {
-                WeekList.add(0,7F)
-                WeekList.removeAt(6)
-            }
-
-        }
-        var i=0
-        for(list in timeList2){
-            if (i<= 3){
-                CategoryList.removeAt(i)
-                if ( list.toInt() == 1) {
-                    CategoryList.add(i,1F)
-                }
-                if ( list.toInt() == 2) {
-                    CategoryList.add(i,2F)
-                }
-                if ( list.toInt() == 3) {
-                    CategoryList.add(i,3F)
-                }
-                if ( list.toInt() == 4) {
-                    CategoryList.add(i,4F)
-                }
-                if ( list.toInt() == 5) {
-                    CategoryList.add(i,5F)
-                }
-                if ( list.toInt() == 6) {
-                    CategoryList.add(i,6F)
-                }
-                if ( list.toInt() == 7) {
-                    CategoryList.add(i,7F)
-                }
-
-
-            }
-            i++
-        }
         setupHorizontalChart(view)
         setupBarChart(view)
         setupBarPercentChart(view)
     }
+
+    private fun updateStreak() {
+        val textViewStreak: TextView = requireView().findViewById(R.id.t2)
+            textViewStreak.text = "🔥🔥 Your on a $streak Study Streak!!! 🔥🔥"
+        }
+
 
     // Comment
     private fun setupHorizontalChart(view: View) {
@@ -228,3 +280,4 @@ if (streak!= 0 ) {
         barChartViewBrushing.animate(data)
     }
 }
+
