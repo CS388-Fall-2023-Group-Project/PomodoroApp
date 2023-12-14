@@ -17,6 +17,13 @@
             android:orientation="vertical">
 
 
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Weekly Total Category Study Time"
+                android:textAlignment="center" />
+
             <com.straiberry.android.charts.view.HorizontalBarChartView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
@@ -37,7 +44,7 @@
             <TextView
                 android:id="@+id/t2"
                 android:layout_width="match_parent"
-                android:layout_height="76dp"
+                android:layout_height="wrap_content"
                 android:text="You Don't Have a Streak 😭"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -47,8 +54,8 @@
 
             <com.straiberry.android.charts.view.BarChartView
                 android:id="@+id/barChartViewBrushing"
-                android:layout_width="394dp"
-                android:layout_height="189dp"
+                android:layout_width="match_parent"
+                android:layout_height="273dp"
                 android:layout_marginTop="50dp"
                 android:layout_marginBottom="10dp"
                 android:clickable="false"
@@ -59,10 +66,17 @@
                 app:chart_labelsSize="8dp"
                 app:chart_spacing="20dp" />
 
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Past 7 days Total Time "
+                android:textAlignment="center" />
+
             <com.straiberry.android.charts.view.BarPercentChartView
                 android:id="@+id/barPercentChartWhitening"
                 android:layout_width="match_parent"
-                android:layout_height="191dp"
+                android:layout_height="202dp"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="10dp"
                 android:clickable="false"
@@ -73,6 +87,12 @@
                 app:chart_labelsSize="10sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:text="🏃‍Your overall studytime compared to other pomodoro users 🟨Yelllow🟨= Highest, 🟦Blue 🟦 = Lowest " />
 
             <com.straiberry.android.charts.view.LineChartView
                 android:id="@+id/linearChartViewOralHygiene"
@@ -87,7 +107,9 @@
                 app:chart_labelsSize="8sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/barChartViewBrushing" />
+                app:layout_constraintTop_toBottomOf="@id/barChartViewBrushing">
+
+            </com.straiberry.android.charts.view.LineChartView>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
