@@ -18,7 +18,7 @@
 
 
             <com.straiberry.android.charts.view.HorizontalBarChartView
-                android:id="@+id/textView"
+                android:id="@+id/horizontalBarChartViewBrushingDigit"
                 android:layout_width="match_parent"
                 android:layout_height="236dp"
                 android:layout_marginBottom="10dp"
@@ -35,10 +35,9 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/t2"
                 android:layout_width="match_parent"
                 android:layout_height="76dp"
-                android:text="You Don't Have a Streak 😭"
+                android:text="🔥🔥 Your on a 10 Study Streak!!! 🔥🔥"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
