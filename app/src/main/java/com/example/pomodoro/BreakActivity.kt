@@ -37,6 +37,10 @@ class BreakActivity: AppCompatActivity() {
         val studyOffMinutes = selectedStudyOff?.let { extractNumberFromString(it) } ?: 0
 
 
+        val selectedRounds = intent.getIntExtra("selectedRounds", 0)
+
+
+
         val webView: WebView = findViewById(R.id.webView)
         exitButton = findViewById(R.id.return_btn2)
         // Enable JavaScript in the WebView

@@ -37,6 +37,7 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var countdownTimer: CountdownTimerHelper
     private lateinit var exitButton: Button
     private lateinit var roundCounter: TextView
+    private var resetTimer = true
 
     private lateinit var welcomeBackDialog: Dialog
     private var roundNumber =1
@@ -62,63 +63,79 @@ class TimerActivity : AppCompatActivity() {
         exitButton = findViewById(R.id.exitStudy)
         roundCounter = findViewById(R.id.roundCounterTV)
 
-
         val selectedStudyOn = intent.getStringExtra("selectedStudyOn")
-        val intentSelectedRoundsString = intent.getStringExtra("selectedRounds")
-
+       // val intentSelectedRoundsString = intent.getStringExtra("selectedRounds")
         val selectedStudyOff = intent.getStringExtra("selectedStudyOff")
-
         val studyOnMinutes = selectedStudyOn?.let { extractNumberFromString(it) } ?: 0
-        val restartTimer = intent.getBooleanExtra("restartTimer", false)
 
+
+
+        val sharedPreferences = getPreferences(Context.MODE_PRIVATE)
+        val intentSelectedRoundsString = intent.getStringExtra("selectedRounds")
         val intentSelectedRounds = intentSelectedRoundsString?.toIntOrNull() ?: 0
 
+        // Save the selectedRounds value in SharedPreferences
+        val editor = sharedPreferences.edit()
+        editor.putInt("selectedRounds", intentSelectedRounds)
+        editor.apply()
 
         if (savedInstanceState != null) {
             roundNumber = savedInstanceState.getInt("roundNumber", 1)
-
         }
 
         updateRoundCounterText()
 
-        // If the flag is true, restart the timer
-        if (restartTimer) {
-            restartTimer()
-        }
 
 
-        val totalTimeInMillis = studyOnMinutes.toLong() // 1 minute
-        val interval = 1000L // 1 second
+        if (roundNumber > intentSelectedRounds) {
+            resetTimer = false
+            roundNumber--
+            Log.d("TimerActivity", "Round number exceeds intentSelectedRounds. resetTimer=$resetTimer")
+          //  val congratsIntent = Intent(this@TimerActivity, CongratsActivity::class.java)
+          //  startActivity(congratsIntent)
+            startCongratsActivity()
+        } else {
+            // If the flag is true, restart the timer
+            if (resetTimer && roundNumber <= intentSelectedRounds) {
+                Log.d("TimerActivity", "Starting countdown timer. resetTimer=$resetTimer")
+                val totalTimeInMillis = studyOnMinutes.toLong() // 1 minute
+                val interval = 1000L // 1 second
 
-        countdownTimer = CountdownTimerHelper(
-            totalTimeInMillis = totalTimeInMillis,
-            interval = interval,
-            onTick = { millisUntilFinished ->
-                val progress = (millisUntilFinished.toFloat() / totalTimeInMillis * 100).toInt()
-                progressBar.progress = progress
+                countdownTimer = CountdownTimerHelper(
+                    totalTimeInMillis = totalTimeInMillis,
+                    interval = interval,
+                    onTick = { millisUntilFinished ->
+                        val progress =
+                            (millisUntilFinished.toFloat() / totalTimeInMillis * 100).toInt()
+                        progressBar.progress = progress
 
-                // Update the timer text
-                val formattedTime = formatTime(millisUntilFinished)
-                timerText.text = formattedTime
-            },
-            onFinish = {
-                // Timer finished, handle it as needed
-                val gotoBreak= Intent(this@TimerActivity,BreakActivity::class.java)
-                gotoBreak.putExtra("selectedStudyOff", selectedStudyOff)
-                startActivity(gotoBreak)
-                roundNumber++
-                isTimerFinished = true
+                        // Update the timer text
+                        val formattedTime = formatTime(millisUntilFinished)
+                        timerText.text = formattedTime
+                    },
+                    onFinish = {
+                        // Timer finished, handle it as needed
+                        val gotoBreak = Intent(this@TimerActivity, BreakActivity::class.java)
+                        resetTimer = false;
+                        gotoBreak.putExtra("selectedStudyOff", selectedStudyOff)
+                        gotoBreak.putExtra("selectedRounds", 0)
 
+
+                        startActivity(gotoBreak)
+
+                        roundNumber++
+                        isTimerFinished = true
+                    }
+                )
+
+                // Start the countdown timer
+                countdownTimer.start()
             }
 
-        )
-
-
-        // Start the countdown timer
-        countdownTimer.start()
+        }
 
         exitButton.setOnClickListener {
-            // Current Time End: Get the time when user end the session
+            // Current Time End: Get the time when the user ends the session
             val currentTimeEnd = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
             // Week Number
             val calendar = Calendar.getInstance()
@@ -132,20 +149,8 @@ class TimerActivity : AppCompatActivity() {
 
             // Navigate back to the home fragment or activity
             finish()
-
-
-
         }
 
-        if (roundNumber > intentSelectedRounds) {
-            countdownTimer.cancel()
-            roundNumber--;
-            val congratsIntent = Intent(this@TimerActivity, CongratsActivity::class.java)
-
-            startActivity(congratsIntent)
-
-
-        }
 
         // Initialize the welcome back dialog
         welcomeBackDialog = Dialog(this)
@@ -155,10 +160,22 @@ class TimerActivity : AppCompatActivity() {
         okButton.setOnClickListener {
             welcomeBackDialog.dismiss()
         }
+    }
 
+    private fun startCongratsActivity() {
+        val congratsIntent = Intent(this, CongratsActivity::class.java)
+        startActivityForResult(congratsIntent, CONGRATS_REQUEST_CODE)
+    }
 
-
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CONGRATS_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            // Handle the result from CongratsActivity, if needed
+            Log.d("TimerActivity", "Received result from CongratsActivity")
+        }
+    }
+    companion object {
+        private const val CONGRATS_REQUEST_CODE = 123 // You can choose any value here
     }
 
 
@@ -255,9 +272,21 @@ class TimerActivity : AppCompatActivity() {
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
         // User swiped out of the app, show notification
-        if (!isTimerFinished) {
+        val destinationActivity = getDestinationActivity(intent)
+        if (!isTimerFinished && destinationActivity != CongratsActivity::class.java) {
             showSwipeAwayNotification()
             restartTimer()
+        }
+    }
+
+    private fun getDestinationActivity(intent: Intent): Class<*>? {
+        val componentName = intent.component
+        return componentName?.className?.let {
+            try {
+                Class.forName(it)
+            } catch (e: ClassNotFoundException) {
+                null
+            }
         }
     }
 
@@ -306,6 +335,8 @@ class TimerActivity : AppCompatActivity() {
             notificationManager.createNotificationChannel(channel)
         }
     }
+
+
 
 
 }
