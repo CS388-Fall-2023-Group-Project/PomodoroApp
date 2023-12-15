@@ -85,7 +85,7 @@ class Database_Example (context: Context): SQLiteOpenHelper(context, DATABASE_NA
                     val timeRange = it.getString(it.getColumnIndex(COLUMN_TIME_RANGE))
                     val duration = it.getInt(it.getColumnIndex(COLUMN_DURATION))
 
-                    val task = TaskInfo(taskID, taskName, taskCategory, timeRange, duration)
+                    val task = TaskInfo(taskID, date, taskName, taskCategory, timeRange, duration)
                     tasks.add(task)
                 }
             }

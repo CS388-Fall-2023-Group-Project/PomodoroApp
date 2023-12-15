@@ -1,7 +1,10 @@
 package com.example.pomodoro
 
+import android.content.ContentValues
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +12,16 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import kotlinx.coroutines.DelicateCoroutinesApi
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class SetStudyGoals : Fragment() {
+
+    private val sharedViewModel: SharedViewModel by viewModels({ requireActivity() })
 
     private lateinit var studyGoalEditText: EditText
     private lateinit var subjectSpinner: Spinner
@@ -22,6 +30,7 @@ class SetStudyGoals : Fragment() {
     private lateinit var roundsSpinner: Spinner
     private lateinit var timeFinishTextView: TextView
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,23 +57,26 @@ class SetStudyGoals : Fragment() {
             val selectedStudyOff = studyOffSpinner.selectedItem.toString()
             val selectedRounds = roundsSpinner.selectedItem.toString()
 
+            val currentDate = SimpleDateFormat("yyyy-MM-d", Locale.getDefault()).format(Date())
+            val currentTimeStart = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
+
+            // -------------------- INITIALIZE INTENT --------------------
             // Log or save the selected values (You can replace this with your desired functionality)
             logSelectedValues(studyGoal, selectedSubject, selectedStudyOn, selectedStudyOff, selectedRounds)
 
             // Calculate and set the time finish
             calculateAndSetTimeFinish(selectedStudyOn, selectedStudyOff, selectedRounds)
 
-           val intent= Intent(requireActivity(),TimerActivity::class.java).apply {
-               putExtra("studyGoal", studyGoal)
-               putExtra("selectedSubject", selectedSubject)
-               putExtra("selectedStudyOn", selectedStudyOn)
-               putExtra("selectedStudyOff", selectedStudyOff)
-               putExtra("selectedRounds", selectedRounds)
-           }
+            val intent= Intent(requireActivity(),TimerActivity::class.java).apply {
+                putExtra("currentDate", currentDate)
+                putExtra("studyGoal", studyGoal)
+                putExtra("selectedSubject", selectedSubject)
+                putExtra("selectedStudyOn", selectedStudyOn)
+                putExtra("selectedStudyOff", selectedStudyOff)
+                putExtra("currentTimeStart", currentTimeStart)
+                putExtra("selectedRounds", selectedRounds)
+            }
             startActivity(intent)
-
-
-
 
 
         }
@@ -75,6 +87,7 @@ class SetStudyGoals : Fragment() {
             val selectedStudyOn = studyOnSpinner.selectedItem.toString()
             val selectedStudyOff = studyOffSpinner.selectedItem.toString()
             val selectedRounds = roundsSpinner.selectedItem.toString()
+            println("Calculating time with studyOn: $selectedStudyOn, studyOff: $selectedStudyOff, rounds: $selectedRounds")
 
             // Calculate and set the time finish without logging
             calculateAndSetTimeFinish(selectedStudyOn, selectedStudyOff, selectedRounds)
@@ -84,8 +97,6 @@ class SetStudyGoals : Fragment() {
     }
 
     private fun logSelectedValues(studyGoal: String, subject: String, studyOn: String, studyOff: String, rounds: String) {
-        // Replace this with your logic to save or log the selected values
-        // For now, we'll print them to the console
         println("Study Goal: $studyGoal")
         println("Subject: $subject")
         println("Study On: $studyOn")
@@ -94,35 +105,38 @@ class SetStudyGoals : Fragment() {
     }
 
     private fun calculateAndSetTimeFinish(studyOn: String, studyOff: String, rounds: String) {
+        var message = "";
         val studyOnMinutes = extractNumberFromString(studyOn)
+        println("Type of studyOnMinutes: ${studyOnMinutes::class.java}")
         val studyOffMinutes = extractNumberFromString(studyOff)
+        println("This is studyoff minutes [$studyOffMinutes]")
         val roundsCount = extractNumberFromString(rounds)
+        println("This is round  [$roundsCount]")
+        println("This is roundCount  [${roundsCount::class.java}]")
 
-        val currentTime = Calendar.getInstance()
 
         // Calculate the total study time in minutes
         val totalStudyTime = (studyOnMinutes + studyOffMinutes) * roundsCount
+        println("This is total [$totalStudyTime]")
+        // finishing time
+        val endTime = Calendar.getInstance()
+        endTime.add(Calendar.MINUTE, totalStudyTime)
 
-        // Add the total study time to the current time
-        currentTime.add(Calendar.MINUTE, totalStudyTime)
-
-        val timeFinishFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-        val timeFinish = timeFinishFormat.format(currentTime.time)
-
-        // Set the calculated time finish in the TextView
-        timeFinishTextView.text = timeFinish
+        // Format the time in 12-hour format
+        val timeFinishFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val timeFinish = timeFinishFormat.format(endTime.time)
+        println(timeFinish)
+        // Display the message with the calculated time
+        message = getString(R.string.finish_message, timeFinish)
+        timeFinishTextView.text = message
     }
 
-
-
-
-    private fun extractNumberFromString(timeString: String): Int {
+    private fun extractNumberFromString(input: String): Int {
         // Assuming the timeString is in the format "X minutes"
-        val regex = """(\d+) minutes""".toRegex()
-        val matchResult = regex.find(timeString)
+        val regex = """^(\d+)""".toRegex()
+        val matchResult = regex.find(input)
 
         return matchResult?.groupValues?.get(1)?.toIntOrNull() ?: 0
     }
-
 
 }

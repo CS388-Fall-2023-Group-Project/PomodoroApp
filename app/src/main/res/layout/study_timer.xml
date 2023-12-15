@@ -4,43 +4,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
-
+    android:background="@drawable/studyp">
 
     <ProgressBar
         android:id="@+id/progressbar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="400dp"
         android:layout_height="400dp"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:progress="100"
-        android:max="100"
         android:layout_centerInParent="true"
         android:indeterminateOnly="false"
+        android:max="100"
+        android:progress="100"
+        android:progressDrawable="@drawable/circular_progress_bar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:progressDrawable="@drawable/circular_progress_bar"/>
-
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/timerTexts"
+        android:id="@+id/studyOnTimerTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:text="00:00"
-        android:textSize="24sp"
-        android:textColor="#000000"
-        android:layout_centerInParent="true"/>
+        android:textColor="#FFFFFF"
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/exitStudy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
-        android:text="Exit"
-        android:onClick="exitButtonClick" />
+        android:text="X"
+        android:textSize="16sp"
+        android:fontFamily="@font/inter"
+        android:onClick="exitButtonClick"
+        android:background="@drawable/timer_exit_button_background"/>
+
+    <TextView
+        android:id="@+id/roundCounterTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="26dp"
+        android:text="Round: "
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:fontFamily="@font/inter"
+        android:textStyle="bold" />
 
 </RelativeLayout>
