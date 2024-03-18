@@ -1,0 +1,232 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/textViewWhatGoal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="What is your goal for today?"
+            android:textSize="16sp"
+            android:fontFamily="@font/inter"
+            android:gravity="start"
+            android:textStyle="bold"
+            android:layout_marginStart="8dp"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:id="@+id/editTextStudyGoal"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_below="@id/textViewWhatGoal"
+            android:background="@drawable/edittext_outline"
+            android:hint="ex: Revise Chapter 2"
+            android:fontFamily="@font/inter"
+            android:textSize="16sp"
+            android:paddingStart="16dp"
+            />
+
+        <TextView
+            android:id="@+id/textViewSubject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="What subject are you studying?"
+            android:layout_below="@id/editTextStudyGoal"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/inter"/>
+
+        <Spinner
+            android:id="@+id/subjectSpinner"
+            android:layout_width="270dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/textViewSubject"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:paddingStart="10dp"
+            android:entries="@array/subject_array"
+            />
+
+        <TextView
+            android:id="@+id/textViewWhatRatio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose your Pomodoro Ratio"
+            android:fontFamily="@font/inter"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_below="@id/subjectSpinner"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/textViewWhatRatio"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp">
+
+            <!-- Box 1 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginEnd="8dp">
+
+                <Spinner
+                    android:id="@+id/studyOn"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:entries="@array/study_on_array"
+                    android:background="@drawable/study_on_spinner"
+                    android:spinnerMode="dropdown"
+                    android:dropDownVerticalOffset="40dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="study on"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <!-- Box 2 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginEnd="8dp">
+
+                <Spinner
+                    android:id="@+id/studyOff"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:entries="@array/study_off_array"
+                    android:background="@drawable/rounds_spinner"
+                    android:spinnerMode="dropdown"
+                    android:dropDownVerticalOffset="40dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="study off"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <!-- Box 3 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginEnd="8dp">
+
+                <Spinner
+                    android:id="@+id/rounds"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:entries="@array/rounds_array"
+                    android:background="@drawable/study_off_spinner"
+                    android:spinnerMode="dropdown"
+                    android:dropDownVerticalOffset="40dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="rounds"
+                    android:gravity="center" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewWhatFinishTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Calculate finish time"
+            android:fontFamily="@font/inter"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_below="@id/textViewWhatRatio"
+            android:layout_marginTop="140dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            />
+
+        <LinearLayout
+            android:id="@+id/FinishTimeBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/box_background"
+            android:padding="16dp"
+            android:layout_below="@id/textViewWhatFinishTime">
+
+        <TextView
+            android:id="@+id/timeFinish"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Finish Time: 11:00 AM"
+            android:fontFamily="@font/inter"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/calculateStudyTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Calculate"
+            android:fontFamily="@font/inter"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/blue_button_background"
+            android:gravity="center"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:padding="13dp"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+        <TextView
+            android:id="@+id/startStudyingButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/FinishTimeBox"
+            android:text="START STUDYING 🚀"
+            android:fontFamily="@font/inter"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/green_button_background"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:padding="16dp"
+            android:textSize="18sp"
+            />
+
+
+    </RelativeLayout>
+</ScrollView>

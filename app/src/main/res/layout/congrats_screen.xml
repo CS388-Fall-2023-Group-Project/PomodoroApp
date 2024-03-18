@@ -1,0 +1,51 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/confetti"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/congratsText"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="Congratulations!"
+        android:gravity="center"
+        android:fontFamily="@font/inter"
+        android:textSize="30sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    <TextView
+        android:id="@+id/congratsMessage"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="You conquered a full study session with flying colors! 🚀 Keep up the fantastic work!"
+        android:gravity="center"
+        android:layout_below="@id/congratsText"
+        android:layout_marginTop="150dp"
+        android:fontFamily="@font/inter"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <Button
+        android:id="@+id/gotoHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to the Home Screen"
+        app:layout_constraintTop_toBottomOf="@id/congratsMessage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/box_background"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

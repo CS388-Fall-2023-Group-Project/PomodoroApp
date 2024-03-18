@@ -47,6 +47,7 @@ class HistoryRVAdapter : RecyclerView.Adapter<HistoryRVAdapter.ViewHolder>() {
 }
 data class TaskInfo (
     var id: Int = 1,
+    var date: String = "",
     var task: String = "",
     var category: String = "",
     var timerange: String = "",
