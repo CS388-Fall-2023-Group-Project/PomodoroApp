@@ -1,4 +1,4 @@
-# Milestone 1 - Pomodoro App (Unit 7)
+# Pomodoro Android App
 
 ## Table of Contents
 
